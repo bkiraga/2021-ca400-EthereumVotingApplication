@@ -1,95 +1,121 @@
-# School of Computing &mdash; Year 4 Project Proposal Form
+## **SECTION A**
 
-> Edit (then commit and push) this document to complete your proposal form.
-> Make use of figures / diagrams where appropriate.
->
-> Do not rename this file.
+Project Title: A Decentralised Voting Application
 
-## SECTION A
+Student 1 Name: Bartlomiej Kiraga
 
-|                     |                   |
-|---------------------|-------------------|
-|Project Title:       | xxxxxx            |
-|Student 1 Name:      | xxxxxx            |
-|Student 1 ID:        | xxxxxx            |
-|Student 2 Name:      | xxxxxx            |
-|Student 2 ID:        | xxxxxx            |
-|Project Supervisor:  | xxxxxx            |
+Student 1 ID: 17327333
 
-> Ensure that the Supervisor formally agrees to supervise your project; this is only recognised once the
-> Supervisor assigns herself/himself via the project Dashboard.
->
-> Project proposals without an assigned
-> Supervisor will not be accepted for presentation to the Approval Panel.
+Student 2 Name: Rónán Mac Gabhann
 
-## SECTION B
-
-> Guidance: This document is expected to be approximately 3 pages in length, but it can exceed this page limit.
-> It is also permissible to carry forward content from this proposal to your later documents (e.g. functional
-> specification) as appropriate.
->
-> Your proposal must include *at least* the following sections.
+Student 2 ID: 17478562
 
 
-### Introduction
+## **SECTION B**
 
-> Describe the general area covered by the project.
 
-### Outline
+### **Introduction**
 
-> Outline the proposed project.
 
-### Background
+    Our proposed project is a web-app voting platform built with blockchain technology to provide a secure, decentralised and incorruptible platform for voting. We intend for our application to be used in national political elections across the globe.
 
-> Where did the ideas come from?
 
-### Achievements
+### **Outline**
 
-> What functions will the project provide? Who will the users be?
 
-### Justification
+    The web application will consist of:
 
-> Why/when/where/how will it be useful?
 
-### Programming language(s)
 
-> List the proposed language(s) to be used.
+*   A blockchain ledger shared with all users
+*   A registration system
+*   An authentication system
+*   A voting system
+*   A fully accessible web application which incorporates all of the above features
 
-### Programming tools / Tech stack
 
-> Describe the compiler, database, web server, etc., and any other software tools you plan to use.
+### **Background**
 
-### Hardware
 
-> Describe any non-standard hardware components which will be required.
+    The inspiration for this project originated from our interest in blockchain technology and its numerous practical applications. We realised that a voting application is a great, practical idea that allows us to learn more about blockchain and showcase some of its advantages in a relevant, real world context.
 
-### Learning Challenges
 
-> List the main new things (technologies, languages, tools, etc) that you will have to learn.
+### **Achievements**
 
-### Breakdown of work
 
-> Clearly identify who will undertake which parts of the project.
->
-> It must be clear from the explanation of this breakdown of work both that each student is responsible for
-> separate, clearly-defined tasks, and that those responsibilities substantially cover all of the work required
-> for the project.
+    Our project aims to eliminate the possibility of corruption or election tampering within democracies and allows for a secure means of remotely voting. Users would be the voters of a nation using this technology.
 
-#### Student 1
 
-> *Student 1 should complete this section.*
+    We aim to make the technology fully accessible to the visually impaired and or hearing impaired individuals to ensure their voices are heard.
 
-#### Student 2
 
-> *Student 2 should complete this section.*
+### **Justification**
 
-## Example
 
-> Example: Here's how you can include images in markdown documents...
+    The current political climate could greatly benefit from a secure decentralised voting. The onset of the COVID-19 pandemic means that there is an increased demand for ways to vote remotely and the number of people worldwide with access to the internet is increasing at a rapid rate, even in the developing countries where the issue of political corruption is more apparent. 
 
-<!-- Basically, just use HTML! -->
 
-<p align="center">
-  <img src="./res/cat.png" width="300px">
-</p>
+    There has been a lot of controversy during elections in countries such as Belarus, Russia and Venezuela and we believe that the use of decentralized blockchain based voting systems in such places could provide more transparency and fairer results if it were to be implemented.
 
+
+### **Programming language(s)**
+
+
+
+*   Node.js
+*   SQL
+*   HTML
+*   CSS
+*   React.js
+*   Solidity
+
+**Programming tools / Tech stack**
+
+
+
+*   AWS for web server
+*   Ethereum
+*   Mocha testing framework
+*   Chai assertion library
+*   Ganache
+
+
+### **Hardware**
+
+
+    None
+
+
+### **Learning Challenges**
+
+
+
+*   Blockchain technology
+*   Node.js
+*   React.js
+*   Mocha
+*   Learning the Solidity programming language for building smart contracts in Ethereum
+
+
+### **Breakdown of work**
+
+
+#### **Student 1**
+
+
+
+*   Blockchain implementation
+*   Testing
+*   User interface
+*   User Authentication
+
+
+#### **Student 2**
+
+
+
+*   Blockchain implementation
+*   Setting up the web server
+*   Research voting systems
+*   Candidate database management
+*   Accessible design
