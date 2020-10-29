@@ -70,7 +70,7 @@ There has been a lot of controversy during elections in countries such as Belaru
 
 ### **Hardware**
 
->None
+None
 
 
 ### **Learning Challenges**
