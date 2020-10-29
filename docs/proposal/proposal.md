@@ -17,7 +17,7 @@ Student 2 ID: 17478562
 ### **Introduction**
 
 
-    Our proposed project is a web-app voting platform built with blockchain technology to provide a secure, decentralised and incorruptible platform for voting. We intend for our application to be used in national political elections across the globe.
+>Our proposed project is a web-app voting platform built with blockchain technology to provide a secure, decentralised and incorruptible platform for voting. We intend for our application to be used in national political elections across the globe.
 
 
 ### **Outline**
