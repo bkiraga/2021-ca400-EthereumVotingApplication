@@ -4,7 +4,7 @@
   "description": "A decentralised blockchain based voting application",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "dev": "lite-server"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "lite-server": "^2.6.1",
     "mocha": "^8.2.1"
   }
 }
