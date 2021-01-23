@@ -12,13 +12,16 @@ contract Voting {
   mapping(address => bool) public voters;
   mapping(uint => Party) public parties;
   uint public partyCount = 0;
+  
+  Party public winningParty;
+  uint public winnerVoteCount = 0;
 
   // Hard coded candidates built during contract instanciation, to be replaced with a read from file.
-  constructor() public {
-      addParty("Fine Gael");
-      addParty("Sinn Féin");
-      addParty("Fianna Fáil");
-      addParty("An Sample Páirtí");
+  constructor() {
+      addParty("Finne Gael");
+      addParty("Sinn Fein");
+      addParty("Fianna Fail");
+      addParty("An Sample Pairti");
   }
 
   // Private temporary function to hard code candidates
@@ -39,5 +42,14 @@ contract Voting {
 
       // Update voters mapping to reflect the voter has voted
       voters[msg.sender] = true;
+  }
+  
+  function countVotes () public {
+      for (uint i = 0; i < partyCount; i++){
+          if (parties[i].votes > winnerVoteCount) {
+              winningParty = parties[i];
+              winnerVoteCount = parties[i].votes;
+          }
+      }
   }
 }
