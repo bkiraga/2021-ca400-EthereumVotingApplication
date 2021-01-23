@@ -13,6 +13,9 @@ contract Voting {
   mapping(uint => Party) public parties;
   uint public partyCount = 0;
   
+  uint startTime = block.timestamp;
+  uint allowedTime = 30;
+  
   Party public winningParty;
   uint public winnerVoteCount = 0;
 
@@ -31,20 +34,15 @@ contract Voting {
   }
 
   function castVote (uint _id) public {
-      // Require the voter to not have voted before
+      require(block.timestamp - startTime < allowedTime);
       require(!voters[msg.sender]);
-
-      // Require the voter is voting for a party on the ballot
       require(_id >= 0 && _id <= partyCount);
-
-      // Add a vote to their chosen party
       parties[_id].votes ++;
-
-      // Update voters mapping to reflect the voter has voted
       voters[msg.sender] = true;
   }
   
   function countVotes () public {
+      require(block.timestamp - startTime >= allowedTime);
       for (uint i = 0; i < partyCount; i++){
           if (parties[i].votes > winnerVoteCount) {
               winningParty = parties[i];
