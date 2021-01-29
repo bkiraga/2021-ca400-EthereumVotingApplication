@@ -5,7 +5,7 @@ import getWeb3 from "./getWeb3";
 import "./App.css";
 
 class App extends Component {
-  state = {loaded: false, ballot:0};
+  state = {loaded: false};
 
   componentDidMount = async () => {
     try {
@@ -38,6 +38,10 @@ class App extends Component {
     this.setState({
       [name]: value
     });
+  }
+
+  castBallot = async() => {
+    await this.voting.methods.castVote(2).send({from: this.accounts[0]});
   }
 
   render() {
