@@ -136,17 +136,67 @@ class Vote extends Component {
   constructor(props) {
     super(props);
     this.castVote = this.castVote.bind(this);
+    this.getCandidates = this.getCandidates.bind(this);
+    this.state = {
+      candidates: []
+    }
   }
 
-  async castVote() {
-    await this.props.voting.methods.castVote(2).send({from: this.props.accounts[0]});
+  async getCandidates() {
+    let parties = [];
+    let partyCount = await this.props.voting.methods.partyCount().call();
+    for (let i = 0; i < partyCount; i++) {
+      let party = await this.props.voting.methods.parties(i).call();
+      console.log(party.id)
+      parties.push(party)
+    }
+    console.log(parties);
+    this.setState(() => {
+      return {
+        candidates: parties
+      }
+    })
+  }
+
+  castVote() {
+    this.props.voting.methods.castVote(2).send({from: this.props.accounts[0]});
   }
 
   render() {
     return (
       <div>
         <p>Vote</p>
+        <SelectCandidate candidates={this.state.candidates} voting={this.props.voting} accounts={this.props.accounts}/>
+        <button onClick={this.getCandidates}>getCandidates</button>
         <button onClick={this.castVote}>CastVote</button>
+      </div>
+    )
+  }
+}
+
+class SelectCandidate extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      candidateChoice: " "
+    }
+  }
+  
+  render() {
+    return (
+      <div>
+        <form onSubmit={(e) => {
+          e.preventDefault()
+          console.log('abc')
+          this.props.voting.methods.castVote(this.candidateId.value).send({from: this.props.accounts[0]});
+          }}>
+          <select ref={(input) => this.candidateId = input} class='form-control'>
+            {this.props.candidates.map((candidate) => {
+              return <option value={candidate.id}>{candidate.name}</option>
+            })}
+          </select>
+          <button type='submit' class='btn btn-primary'>Vote</button>
+        </form>
       </div>
     )
   }
