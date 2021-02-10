@@ -69,10 +69,8 @@ class NavBar extends Component {
     let partyCount = await this.props.voting.methods.partyCount().call();
     for (let i = 0; i < partyCount; i++) {
       let party = await this.props.voting.methods.parties(i).call();
-      console.log(party.id)
       parties.push(party)
     }
-    console.log(parties);
     this.setState(() => {
       return {
         candidates: parties
@@ -171,12 +169,12 @@ class SelectCandidate extends Component {
           e.preventDefault()
           this.props.voting.methods.castVote(this.candidateId.value).send({from: this.props.accounts[0]});
           }}>
-          <select ref={(input) => this.candidateId = input} class='form-control'>
+          <select ref={(input) => this.candidateId = input} className='form-control'>
             {this.props.candidates.map((candidate) => {
-              return <option value={candidate.id}>{candidate.name}</option>
+              return <option key={candidate.id} value={candidate.id}>{candidate.name}</option>
             })}
           </select>
-          <button type='submit' class='btn btn-primary'>Vote</button>
+          <button type='submit' className='btn btn-primary'>Vote</button>
         </form>
       </div>
     )
@@ -193,21 +191,25 @@ class ElectionResults extends Component {
   }
 
   async handleElectionResults() {
-    this.props.voting.methods.countVotes().send({from: this.props.accounts[0]});
-    const winner = await this.props.voting.methods.winningParty().call
+    await this.props.voting.methods.countVotes().send({from: this.props.accounts[0]});
+    let winnerParty = await this.props.voting.methods.winningParty().call();
     this.setState(() => {
       return {
-        winner: winner
+        winner: winnerParty
       }
     })
-    console.log(this.state.winner)
+    console.log(this.state.winner);
+    console.log('abc');
+    console.log(this.state.winner.name);
+    console.log(this.state.winner.votes);
   }
 
   render() {
     return (
       <div>
         <button onClick={this.handleElectionResults}>Election Results</button>
-        {/* <p>{this.state.winner.name}</p> */}
+        {this.state.winner !== undefined ? this.state.winner.name : " "}
+        {this.state.winner !== undefined ? this.state.winner.votes : " "}
       </div>
     )
   }
