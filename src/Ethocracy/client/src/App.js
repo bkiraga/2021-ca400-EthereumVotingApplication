@@ -198,18 +198,36 @@ class ElectionResults extends Component {
         winner: winnerParty
       }
     })
-    console.log(this.state.winner);
-    console.log('abc');
-    console.log(this.state.winner.name);
-    console.log(this.state.winner.votes);
   }
 
   render() {
     return (
       <div>
         <button onClick={this.handleElectionResults}>Election Results</button>
-        {this.state.winner !== undefined ? this.state.winner.name : " "}
-        {this.state.winner !== undefined ? this.state.winner.votes : " "}
+        {this.state.winner !== undefined ? <ResultsTable winner={this.state.winner}/> : " "}
+      </div>
+    )
+  }
+}
+
+class ResultsTable extends Component {
+  render() {
+    return (
+      <div>
+        <table>
+          <thread>
+            <tr>
+              <th>Name</th>
+              <th>Votes</th>
+            </tr>
+          </thread>
+          <tbody>
+            <tr>
+              <th>{this.props.winner.name}</th>
+              <td>{this.props.winner.votes}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     )
   }
