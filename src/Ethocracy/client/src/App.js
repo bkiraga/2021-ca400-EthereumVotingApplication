@@ -214,7 +214,10 @@ class ResultsTable extends Component {
   render() {
     return (
       <div>
-        <table>
+      <p>Winner:{this.props.winner.name}</p>
+      <p>Vote: {this.props.winner.votes}</p>
+
+        {/* <table>
           <thread>
             <tr>
               <th>Name</th>
@@ -227,7 +230,7 @@ class ResultsTable extends Component {
               <td>{this.props.winner.votes}</td>
             </tr>
           </tbody>
-        </table>
+        </table> */}
       </div>
     )
   }
