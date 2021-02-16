@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import VotingContract from "./contracts/Voting.json";
+import ElectionBuilderContract from "./contracts/ElectionBuilder.json";
+import ElectionContract from "./contracts/Election.json";
 import getWeb3 from "./getWeb3";
 
 import "./App.css";
@@ -17,10 +18,23 @@ class App extends Component {
 
       this.networkId = await this.web3.eth.net.getId();
 
-      this.voting = new this.web3.eth.Contract(
-        VotingContract.abi,
-        VotingContract.networks[this.networkId] && VotingContract.networks[this.networkId].address,
+      this.electionBuilder = new this.web3.eth.Contract(
+        ElectionBuilderContract.abi,
+        ElectionBuilderContract.networks[this.networkId] && ElectionBuilderContract.networks[this.networkId].address,
       );
+
+      this.voting = new this.web3.eth.Contract(
+        ElectionContract.abi,
+        ElectionContract.networks[this.networkId] && ElectionContract.networks[this.networkId].address,
+      );
+
+      // this.voting = this.web3.eth.contract(ElectionContract.abi).at("0xE872CC2494f2b6ec13B2834DC2c21B5C75CcaCb0")
+      // var Web3 = require('web3');
+      // var web3 = new Web3();
+      // var contractClass = web3.eth.contract(contractClassAbi);
+      // var contractInstance = contractClass.at(contractAddress);
+
+      // this.voting = new this.web3.eth.Contract(ElectionContract.abi).at("0xE872CC2494f2b6ec13B2834DC2c21B5C75CcaCb0");
 
       this.setState({loaded:true});
     } catch (error) {
@@ -41,6 +55,7 @@ class App extends Component {
         <NavBar 
           voting={this.voting}
           accounts = {this.accounts}
+          electionBuilder={this.electionBuilder}
         />
       </div>
     );
@@ -132,8 +147,34 @@ class NavBar extends Component {
         <button onClick={this.handleElectionStatistics}>Election Statistics</button>
         {this.state.aboutUsVisibility ? <AboutUs />: " "}
         {this.state.voteVisibility ? <Vote voting={this.props.voting} accounts={this.props.accounts} candidates={this.state.candidates}/>: " "}
-        {this.state.deployElectionVisibility ? <DeployElection/>: " "}
+        {this.state.deployElectionVisibility ? <DeployElection electionBuilder={this.props.electionBuilder} accounts={this.props.accounts}/>: " "}
         {this.state.electionStatisticsVisibility ? <ElectionStastics/>: " "}
+      </div>
+    )
+  }
+}
+
+class DeployElection extends Component {
+  constructor(props) {
+    super(props);
+    this.handleDeployElection = this.handleDeployElection.bind(this);
+    this.resp = this.resp.bind(this);
+  }
+
+  async handleDeployElection() {
+    await this.props.electionBuilder.methods.deployElection('abcdef').send({from: this.props.accounts[0]});
+  }
+
+  resp() {
+    this.props.electionBuilder.methods.elections(0).call().then(console.log);
+  }
+
+  render() {
+    return (
+      <div>
+        <p>DeployElection</p>
+        <button onClick={this.handleDeployElection}>Deploy Election</button>
+        <button onClick={this.resp}>resp</button>
       </div>
     )
   }
@@ -232,17 +273,6 @@ class ResultsTable extends Component {
     )
   }
 }
-
-class DeployElection extends Component {
-  render() {
-    return (
-      <div>
-        <p>DeployElection</p>
-      </div>
-    )
-  }
-}
-
 
 class ElectionStastics extends Component {
   render() {
