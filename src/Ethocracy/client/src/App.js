@@ -157,22 +157,181 @@ class NavBar extends Component {
 class DeployElection extends Component {
   constructor(props) {
     super(props);
-    this.handleDeployElection = this.handleDeployElection.bind(this);
-    this.resp = this.resp.bind(this);
+    this.setCandidates = this.setCandidates.bind(this);
+    this.setType = this.setType.bind(this);
+    this.state = {
+      candidates: [],
+      electionType: 'FPP'
+    }
   }
 
-  async handleDeployElection() {
-    await this.props.electionBuilder.methods.deployElection('abcdef').send({from: this.props.accounts[0]});
+  setType(type) {
+    this.setState(() => {
+      return {
+        electionType: type
+      }
+    })
   }
 
-  resp() {
-    this.props.electionBuilder.methods.elections(0).call().then(console.log);
+  setCandidates(candidate, setting) {
+    if (setting === 'add') {
+      this.setState((prevState) => {
+        return {
+          candidates: prevState.candidates.concat(candidate)
+        }
+      })
+    } else if (setting === 'rm') {
+      this.setState((prevState) => {
+        prevState.candidates.pop();
+        return {
+          candidates: prevState.candidates
+        }
+      })
+    } else if (setting === 'rmAll') {
+      this.setState(() => {
+        return {
+          candidates: []
+        }
+      })
+    }
+  }
+
+  
+  render() {
+    return (
+      <div>
+        <CandidateList
+          candidates={this.state.candidates}
+        />
+        <AddCandidate
+          setCandidates={this.setCandidates}
+          candidates={this.state.candidates}
+        />
+        <ElectionType
+          setType={this.setType}
+        />
+        <SubmitElection
+          electionBuilder={this.props.electionBuilder}
+          accounts={this.props.accounts}
+          candidates={this.state.candidates}
+        />
+        
+      </div>
+    )
+  }
+}
+
+class CandidateList extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div>
+        {
+          this.props.candidates.map((candidate) => <Candidate key={candidate} candidateValue={candidate}/>)
+        }
+      </div>
+    )
+  }
+}
+
+class Candidate extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div>
+        {this.props.candidateValue}
+      </div>
+    )
+  }
+}
+
+class AddCandidate extends Component {
+  constructor(props) {
+    super(props);
+    this.handleAddCandidates = this.handleAddCandidates.bind(this);
+    this.handleRemove = this.handleRemove.bind(this);
+    this.handleRemoveAll = this.handleRemoveAll.bind(this);
+  }
+
+  handleAddCandidates(e) {
+    e.preventDefault();
+    const candidate = e.target.elements.addCandidates.value.trim();
+    this.props.setCandidates(candidate, 'add');
+    e.target.elements.addCandidates.value = '';
+  }
+
+  handleRemove() {
+    this.props.setCandidates(undefined, 'rm');
+  }
+
+  handleRemoveAll() {
+    this.props.setCandidates(undefined, 'rmAll');
+  }
+
+  render() {
+    return(
+      <div>
+        <form onSubmit={this.handleAddCandidates}>
+          <input type="text" name="addCandidates"/>
+          <button>Add Candidate</button>
+        </form>
+        <button onClick={this.handleRemove}>Remove</button>
+        <button onClick={this.handleRemoveAll}>Remove all</button>
+      </div>
+    )
+  }
+}
+
+class ElectionType extends Component {
+  constructor(props){
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.setType(this.electionType.value);
   }
 
   render() {
     return (
       <div>
-        <p>DeployElection</p>
+        <form onSubmit={this.handleSubmit}>
+            <select ref={(input) => this.electionType = input} className='selectElectionType'>
+              <option>{'FPP'}</option>
+              <option>{'STV'}</option>
+            </select>
+          <button>Select Type</button>
+        </form>
+      </div>
+    )
+  }
+}
+
+class SubmitElection extends Component {
+  constructor(props){
+    super(props);
+    this.handleDeployElection = this.handleDeployElection.bind(this);
+    this.resp = this.resp.bind(this);
+  }
+
+  async handleDeployElection() {
+    await this.props.electionBuilder.methods.deployElection(this.props.candidates).send({from: this.props.accounts[0]});
+  }
+
+  resp() {
+    this.props.electionBuilder.methods.elections(0).call().then(console.log);
+    // let elections = this.props.getElections();
+
+  }
+
+  render() {
+    return (
+      <div>
         <button onClick={this.handleDeployElection}>Deploy Election</button>
         <button onClick={this.resp}>resp</button>
       </div>
@@ -195,8 +354,19 @@ class Vote extends Component {
     return (
       <div>
         <p>Vote</p>
+        <SelectElection />
         <SelectCandidate candidates={this.props.candidates} voting={this.props.voting} accounts={this.props.accounts}/>
         <ElectionResults voting={this.props.voting} accounts={this.props.accounts}/>
+      </div>
+    )
+  }
+}
+
+class SelectElection extends Component {
+  render() {
+    return (
+      <div>
+        
       </div>
     )
   }
