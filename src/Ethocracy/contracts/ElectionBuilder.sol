@@ -13,9 +13,4 @@ contract ElectionBuilder{
         elections.push(election);
         electionCount++;
     }
-    //     function deployElection() public {
-    //     Election election = new Election();
-    //     elections.push(election);
-    //     electionCount++;
-    // }
 }

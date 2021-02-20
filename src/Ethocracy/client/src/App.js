@@ -23,19 +23,6 @@ class App extends Component {
         ElectionBuilderContract.networks[this.networkId] && ElectionBuilderContract.networks[this.networkId].address,
       );
 
-      // this.voting = new this.web3.eth.Contract(
-      //   ElectionContract.abi,
-      //   ElectionContract.networks[this.networkId] && ElectionContract.networks[this.networkId].address,
-      // );
-
-      // this.voting = this.web3.eth.contract(ElectionContract.abi).at("0xE872CC2494f2b6ec13B2834DC2c21B5C75CcaCb0")
-      // var Web3 = require('web3');
-      // var web3 = new Web3();
-      // var contractClass = web3.eth.contract(contractClassAbi);
-      // var contractInstance = contractClass.at(contractAddress);
-
-      // this.voting = new this.web3.eth.Contract(ElectionContract.abi).at("0xE872CC2494f2b6ec13B2834DC2c21B5C75CcaCb0");
-
       this.setState({loaded:true});
     } catch (error) {
       alert(

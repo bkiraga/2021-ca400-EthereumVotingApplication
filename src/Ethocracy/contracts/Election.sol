@@ -25,10 +25,6 @@ contract Election {
       }
   }
 
-  //   constructor() public {
-  //     addParty("abc");
-  // }
-
   function addParty (string memory _name) private {
       parties[partyCount] = Party(_name, partyCount, 0);
       partyCount ++;
