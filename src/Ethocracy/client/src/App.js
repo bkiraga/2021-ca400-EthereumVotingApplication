@@ -23,10 +23,10 @@ class App extends Component {
         ElectionBuilderContract.networks[this.networkId] && ElectionBuilderContract.networks[this.networkId].address,
       );
 
-      this.voting = new this.web3.eth.Contract(
-        ElectionContract.abi,
-        ElectionContract.networks[this.networkId] && ElectionContract.networks[this.networkId].address,
-      );
+      // this.voting = new this.web3.eth.Contract(
+      //   ElectionContract.abi,
+      //   ElectionContract.networks[this.networkId] && ElectionContract.networks[this.networkId].address,
+      // );
 
       // this.voting = this.web3.eth.contract(ElectionContract.abi).at("0xE872CC2494f2b6ec13B2834DC2c21B5C75CcaCb0")
       // var Web3 = require('web3');
@@ -53,9 +53,10 @@ class App extends Component {
       <div className="App">
         <h1>Ethocracy</h1>
         <NavBar 
-          voting={this.voting}
+          // voting={this.voting}
           accounts = {this.accounts}
           electionBuilder={this.electionBuilder}
+          web3 = {this.web3}
         />
       </div>
     );
@@ -69,28 +70,12 @@ class NavBar extends Component {
     this.handleVote = this.handleVote.bind(this);
     this.handleDeployElection = this.handleDeployElection.bind(this);
     this.handleElectionStatistics = this.handleElectionStatistics.bind(this);
-    this.getCandidates = this.getCandidates.bind(this);
     this.state = {
       aboutUsVisibility: true,
       voteVisibility: false,
       deployElectionVisibility: false,
       electionStatisticsVisibility: false,
-      candidates: []
     }
-  }
-
-  async getCandidates() {
-    let parties = [];
-    let partyCount = await this.props.voting.methods.partyCount().call();
-    for (let i = 0; i < partyCount; i++) {
-      let party = await this.props.voting.methods.parties(i).call();
-      parties.push(party)
-    }
-    this.setState(() => {
-      return {
-        candidates: parties
-      }
-    })
   }
 
   handleAboutUs() {
@@ -105,7 +90,6 @@ class NavBar extends Component {
   }
 
   handleVote() {
-    this.getCandidates();
     this.setState((prevState) => {
       return {
         aboutUsVisibility: false,
@@ -146,9 +130,208 @@ class NavBar extends Component {
         <button onClick={this.handleDeployElection}>Deploy Election</button>
         <button onClick={this.handleElectionStatistics}>Election Statistics</button>
         {this.state.aboutUsVisibility ? <AboutUs />: " "}
-        {this.state.voteVisibility ? <Vote voting={this.props.voting} accounts={this.props.accounts} candidates={this.state.candidates}/>: " "}
-        {this.state.deployElectionVisibility ? <DeployElection electionBuilder={this.props.electionBuilder} accounts={this.props.accounts}/>: " "}
+        {this.state.voteVisibility ? <Vote electionBuilder={this.props.electionBuilder} accounts={this.props.accounts} candidates={this.state.candidates} web3={this.props.web3}/>: " "}
+        {this.state.deployElectionVisibility ? <DeployElection electionBuilder={this.props.electionBuilder} accounts={this.props.accounts} web3={this.props.web3}/>: " "}
         {this.state.electionStatisticsVisibility ? <ElectionStastics/>: " "}
+      </div>
+    )
+  }
+}
+
+class AboutUs extends Component {
+  render() {
+    return (
+      <div>
+        <p>AboutUs</p>
+      </div>
+    )
+  }
+}
+
+class Vote extends Component {
+  constructor(props){
+    super(props);
+    this.getElections = this.getElections.bind(this);
+    this.setContract = this.setContract.bind(this);
+    this.setSelectedElection = this.setSelectedElection.bind(this);
+    this.state = {
+      elections: [],
+      contract: undefined,
+      selectedElection: false
+    }
+  }
+
+  componentDidMount = async () => {
+    await this.getElections();
+  }
+
+  async getElections() {
+    let elections = [];
+    let electionCount = await this.props.electionBuilder.methods.electionCount().call();
+    for (let i = 0; i < electionCount; i++) {
+      let election = await this.props.electionBuilder.methods.elections(i).call();
+      elections.push(election);
+    }
+    this.setState(() => {
+      return {
+        elections: elections
+      }
+    })
+    console.log(this.state.elections);
+  }
+
+  setContract(newContract) {
+    this.setState(() => {
+      return {
+        contract: newContract
+      }
+    })
+  }
+
+  setSelectedElection(bool) {
+    this.setState(() => {
+      return {
+        selectedElection: bool
+      }
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <p>Vote</p>
+        <SelectElection elections={this.state.elections} contract={this.state.contract} setContract={this.setContract} setSelectedElection={this.setSelectedElection} web3={this.props.web3}/>
+        {this.state.selectedElection ? <SelectCandidate candidates={this.state.candidates} contract={this.state.contract} accounts={this.props.accounts}/> : " "}
+        {this.state.selectedElection ? <ElectionResults contract={this.state.contract} accounts={this.props.accounts}/> : " "}
+        {/* <ElectionResults contract={this.state.contract} accounts={this.props.accounts}/> */}
+      </div>
+    )
+  }
+}
+
+class SelectElection extends Component {
+  constructor(props){
+    super(props);
+    this.handleSelectElection = this.handleSelectElection.bind(this);
+  }
+
+  async handleSelectElection(e) {
+    e.preventDefault();
+    const address = e.target.elements.selectElection.value.trim();
+    let contract = await new this.props.web3.eth.Contract(ElectionContract.abi, address);
+    this.props.setContract(contract);
+    this.props.setSelectedElection(true);
+    // console.log(this.props.contract);
+    let candidate = await contract.methods.parties(1).call()
+    console.log(candidate);
+  }
+
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.handleSelectElection}>
+          <input type="text" name="selectElection"/>
+          <button>Select Election</button>
+        </form>
+      </div>
+    )
+  }
+}
+
+class SelectCandidate extends Component {
+  constructor(bind) {
+    super(bind);
+    this.getCandidates = this.getCandidates.bind(this);
+    this.state = {
+      candidates: []
+    }
+  }
+
+  componentDidMount = async () => {
+    await this.getCandidates();
+  }
+
+  async getCandidates() {
+    let parties = [];
+    let partyCount = await this.props.contract.methods.partyCount().call();
+    for (let i = 0; i < partyCount; i++) {
+      let party = await this.props.contract.methods.parties(i).call();
+      parties.push(party)
+    }
+    this.setState(() => {
+      return {
+        candidates: parties
+      }
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <form onSubmit={(e) => {
+          e.preventDefault()
+          this.props.contract.methods.castVote(this.candidateId.value).send({from: this.props.accounts[0]});
+          }}>
+          <select ref={(input) => this.candidateId = input} className='form-control'>
+            {this.state.candidates.map((candidate) => {
+              return <option key={candidate.id} value={candidate.id}>{candidate.name}</option>
+            })}
+          </select>
+          <button type='submit' className='btn btn-primary'>Vote</button>
+        </form>
+      </div>
+    )
+  }
+}
+
+class ElectionResults extends Component {
+  constructor(props) {
+    super(props);
+    this.handleElectionResults = this.handleElectionResults.bind(this);
+    this.state = {
+      winner: undefined
+    }
+  } 
+
+  async handleElectionResults() {
+    await this.props.contract.methods.countVotes().send({from: this.props.accounts[0]});
+    let winnerParty = await this.props.contract.methods.winningParty().call();
+    this.setState(() => {
+      return {
+        winner: winnerParty
+      }
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <p>Election Results</p>
+        <button onClick={this.handleElectionResults}>Get Result</button>
+        {this.state.winner !== undefined ? <ResultsTable winner={this.state.winner}/> : " "}
+      </div>
+    )
+  }
+}
+
+class ResultsTable extends Component {
+  render() {
+    return (
+      <div>
+        <table>
+          <thread>
+            <tr>
+              <th>Name</th>
+              <th>Votes</th>
+            </tr>
+          </thread>
+          <tbody>
+            <tr>
+              <th>{this.props.winner.name}</th>
+              <td>{this.props.winner.votes}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     )
   }
@@ -214,6 +397,7 @@ class DeployElection extends Component {
           electionBuilder={this.props.electionBuilder}
           accounts={this.props.accounts}
           candidates={this.state.candidates}
+          web3={this.props.web3}
         />
         
       </div>
@@ -323,10 +507,12 @@ class SubmitElection extends Component {
     await this.props.electionBuilder.methods.deployElection(this.props.candidates).send({from: this.props.accounts[0]});
   }
 
-  resp() {
-    this.props.electionBuilder.methods.elections(0).call().then(console.log);
-    // let elections = this.props.getElections();
-
+  async resp() {
+    let address = await this.props.electionBuilder.methods.elections(0).call();
+    let contract = await new this.props.web3.eth.Contract(ElectionContract.abi, address);
+    console.log(contract);
+    let candidate = await contract.methods.parties(1).call()
+    // console.log(candidate);
   }
 
   render() {
@@ -339,116 +525,11 @@ class SubmitElection extends Component {
   }
 }
 
-class AboutUs extends Component {
-  render() {
-    return (
-      <div>
-        <p>AboutUs</p>
-      </div>
-    )
-  }
-}
-
-class Vote extends Component {
-  render() {
-    return (
-      <div>
-        <p>Vote</p>
-        <SelectElection />
-        <SelectCandidate candidates={this.props.candidates} voting={this.props.voting} accounts={this.props.accounts}/>
-        <ElectionResults voting={this.props.voting} accounts={this.props.accounts}/>
-      </div>
-    )
-  }
-}
-
-class SelectElection extends Component {
-  render() {
-    return (
-      <div>
-        
-      </div>
-    )
-  }
-}
-
-class SelectCandidate extends Component {  
-  render() {
-    return (
-      <div>
-        <form onSubmit={(e) => {
-          e.preventDefault()
-          this.props.voting.methods.castVote(this.candidateId.value).send({from: this.props.accounts[0]});
-          }}>
-          <select ref={(input) => this.candidateId = input} className='form-control'>
-            {this.props.candidates.map((candidate) => {
-              return <option key={candidate.id} value={candidate.id}>{candidate.name}</option>
-            })}
-          </select>
-          <button type='submit' className='btn btn-primary'>Vote</button>
-        </form>
-      </div>
-    )
-  }
-}
-
-class ElectionResults extends Component {
-  constructor(props) {
-    super(props);
-    this.handleElectionResults = this.handleElectionResults.bind(this);
-    this.state = {
-      winner: undefined
-    }
-  }
-
-  async handleElectionResults() {
-    await this.props.voting.methods.countVotes().send({from: this.props.accounts[0]});
-    let winnerParty = await this.props.voting.methods.winningParty().call();
-    this.setState(() => {
-      return {
-        winner: winnerParty
-      }
-    })
-  }
-
-  render() {
-    return (
-      <div>
-        <button onClick={this.handleElectionResults}>Election Results</button>
-        {this.state.winner !== undefined ? <ResultsTable winner={this.state.winner}/> : " "}
-      </div>
-    )
-  }
-}
-
-class ResultsTable extends Component {
-  render() {
-    return (
-      <div>
-        <table>
-          <thread>
-            <tr>
-              <th>Name</th>
-              <th>Votes</th>
-            </tr>
-          </thread>
-          <tbody>
-            <tr>
-              <th>{this.props.winner.name}</th>
-              <td>{this.props.winner.votes}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    )
-  }
-}
-
 class ElectionStastics extends Component {
   render() {
     return (
       <div>
-        <p>ElectionStatistics</p>
+        <p>Your Elections</p>
       </div>
     )
   }
