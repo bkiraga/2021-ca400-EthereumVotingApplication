@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.8.0;
+pragma experimental ABIEncoderV2;
 
-contract Voting {
-  // Party structure
+contract Election {
   struct Party {
       string name;
       uint id;
       uint votes;
   }
 
-  // Contract variables
   mapping(address => bool) public voters;
   mapping(uint => Party) public parties;
   uint public partyCount = 0;
@@ -20,15 +19,12 @@ contract Voting {
   Party public winningParty;
   uint public winnerVoteCount = 0;
 
-  // Hard coded candidates built during contract instanciation, to be replaced with a read from file.
-  constructor() public {
-      addParty("Finne Gael");
-      addParty("Sinn Fein");
-      addParty("Fianna Fail");
-      addParty("An Sample Pairti");
+  constructor(string[] memory partyNames) public {
+      for (uint i = 0; i < partyNames.length; i++) {
+          addParty(partyNames[i]);
+      }
   }
 
-  // Private temporary function to hard code candidates
   function addParty (string memory _name) private {
       parties[partyCount] = Party(_name, partyCount, 0);
       partyCount ++;
