@@ -8,8 +8,8 @@ contract ElectionBuilder{
     Election[] public elections;
     uint public electionCount = 0;
     
-    function deployElection(string[] memory _partyNames) public {
-        Election election = new Election(_partyNames);
+    function deployElection(string[] memory _partyNames, uint time) public {
+        Election election = new Election(_partyNames, time);
         elections.push(election);
         electionCount++;
     }

@@ -1,9 +1,11 @@
 import React, { Component } from "react";
+import DatePicker from "react-datepicker";
 import ElectionBuilderContract from "./contracts/ElectionBuilder.json";
 import ElectionContract from "./contracts/Election.json";
 import getWeb3 from "./getWeb3";
 
 import "./App.css";
+import "react-datepicker/dist/react-datepicker.css";
 
 class App extends Component {
   state = {
@@ -303,6 +305,7 @@ class ElectionResults extends Component {
 
 class ResultsTable extends Component {
   render() {
+    console.log(this.props.winner)
     return (
       <div>
       <p>Winner:{this.props.winner.name}</p>
@@ -332,13 +335,16 @@ class DeployElection extends Component {
     super(props);
     this.setCandidates = this.setCandidates.bind(this);
     this.setType = this.setType.bind(this);
+    this.setSelectedTime = this.setSelectedTime.bind(this);
     this.state = {
       candidates: [],
-      electionType: 'FPP'
+      electionType: 'FPP',
+      selectedTime: new Date(),
     }
   }
 
   setType(type) {
+    console.log(Math.floor(this.state.selectedTime.getTime()/1000));
     this.setState(() => {
       return {
         electionType: type
@@ -369,7 +375,14 @@ class DeployElection extends Component {
     }
   }
 
-  
+  setSelectedTime(date) {
+    this.setState(() => {
+      return {
+        selectedTime: date
+      }
+    })
+  }
+
   render() {
     return (
       <div>
@@ -383,11 +396,19 @@ class DeployElection extends Component {
         <ElectionType
           setType={this.setType}
         />
+        <DatePicker
+          showTimeSelect
+          selected={this.state.selectedTime}
+          onChange={date => this.setSelectedTime(date)}
+          minDate={new Date()}
+          dateFormat="dd/MM/yyyy h:mm aa"
+        />
         <SubmitElection
           electionBuilder={this.props.electionBuilder}
           accounts={this.props.accounts}
           candidates={this.state.candidates}
           web3={this.props.web3}
+          selectedTime={this.state.selectedTime}
         />
         
       </div>
@@ -402,6 +423,7 @@ class CandidateList extends Component {
   render() {
     return (
       <div>
+        <p>Candidates</p>
         {
           this.props.candidates.map((candidate) => <Candidate key={candidate} candidateValue={candidate}/>)
         }
@@ -474,6 +496,7 @@ class ElectionType extends Component {
   render() {
     return (
       <div>
+        <p>Election Settings</p>
         <form onSubmit={this.handleSubmit}>
             <select ref={(input) => this.electionType = input} className='selectElectionType'>
               <option>{'FPP'}</option>
@@ -494,8 +517,16 @@ class SubmitElection extends Component {
   }
 
   async handleDeployElection() {
-    await this.props.electionBuilder.methods.deployElection(this.props.candidates).send({from: this.props.accounts[0]});
+    const selectedTimestamp = Math.ceil(this.props.selectedTime.getTime() / 1000);
+    console.log(selectedTimestamp);
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    console.log(currentTimestamp);
+    const time = selectedTimestamp - currentTimestamp;
+    console.log(time);
+    await this.props.electionBuilder.methods.deployElection(this.props.candidates, time).send({from: this.props.accounts[0]});
   }
+
+  //
 
   async resp() {
     let address = await this.props.electionBuilder.methods.elections(0).call();
@@ -508,6 +539,7 @@ class SubmitElection extends Component {
   render() {
     return (
       <div>
+        <p>Deploy</p>
         <button onClick={this.handleDeployElection}>Deploy Election</button>
         <button onClick={this.resp}>resp</button>
       </div>

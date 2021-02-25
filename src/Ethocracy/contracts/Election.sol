@@ -14,15 +14,16 @@ contract Election {
   uint public partyCount = 0;
   
   uint startTime = block.timestamp;
-//   uint allowedTime = 30;
+  uint allowedTime = 30;
   
   Party public winningParty;
   uint public winnerVoteCount = 0;
 
-  constructor(string[] memory partyNames) public {
-      for (uint i = 0; i < partyNames.length; i++) {
-          addParty(partyNames[i]);
-      }
+  constructor(string[] memory partyNames, uint time) public {
+    allowedTime = time;
+    for (uint i = 0; i < partyNames.length; i++) {
+        addParty(partyNames[i]);
+    }
   }
 
   function addParty (string memory _name) private {
@@ -31,7 +32,7 @@ contract Election {
   }
 
   function castVote (uint _id) public {
-    //   require(block.timestamp - startTime < allowedTime);
+      require(block.timestamp - startTime < allowedTime);
       require(!voters[msg.sender]);
       require(_id >= 0 && _id <= partyCount);
       parties[_id].votes ++;
@@ -39,7 +40,7 @@ contract Election {
   }
   
   function countVotes () public {
-    //   require(block.timestamp - startTime >= allowedTime);
+      require(block.timestamp - startTime >= allowedTime);
       for (uint i = 0; i < partyCount; i++){
           if (parties[i].votes > winnerVoteCount) {
               winningParty = parties[i];
