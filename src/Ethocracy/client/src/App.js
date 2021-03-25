@@ -202,17 +202,37 @@ class SelectElection extends Component {
   constructor(props){
     super(props);
     this.handleSelectElection = this.handleSelectElection.bind(this);
+    this.state = {
+      electionExists: false
+    }
   }
 
   async handleSelectElection(e) {
     e.preventDefault();
     const address = e.target.elements.selectElection.value.trim();
-    let contract = await new this.props.web3.eth.Contract(ElectionContract.abi, address);
-    this.props.setContract(contract);
-    this.props.setSelectedElection(true);
-    // console.log(this.props.contract);
-    let candidate = await contract.methods.parties(1).call()
-    console.log(candidate);
+    let contract;
+    try {
+      contract = await new this.props.web3.eth.Contract(ElectionContract.abi, address);
+      let contractAddress = contract.methods.getAddress().call();
+      this.setState(() => {
+        return {
+          electionExists: true
+        }
+      })
+    } catch(e) {
+      this.setState(() => {
+        return {
+          electionExists: false
+        }
+      })
+      console.log("error: contract address not found");
+    }
+    if (this.state.electionExists === true) {
+      this.props.setContract(contract);
+      this.props.setSelectedElection(true);
+    } else {
+      this.props.setSelectedElection(false);
+    }
   }
 
   render() {

@@ -26,6 +26,10 @@ contract Election {
     }
   }
 
+  function getAddress () public view returns (address) {
+      return address(this);
+  }
+
   function addParty (string memory _name) private {
       parties[partyCount] = Party(_name, partyCount, 0);
       partyCount ++;

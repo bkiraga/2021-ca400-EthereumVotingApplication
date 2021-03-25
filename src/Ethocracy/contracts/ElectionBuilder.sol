@@ -7,6 +7,14 @@ import "./Election.sol";
 contract ElectionBuilder{
     Election[] public elections;
     uint public electionCount = 0;
+
+    // function checkElectionExistance(string memory _address) public {
+    //     for (uint i = 0; i < electionCount; i++){
+    //         if (StringUtils.equal(abi.encodePacked(elections[i].getAddress), abi.encodePacked(_address))){
+
+    //         }
+    //     }
+    // }
     
     function deployElection(string[] memory _partyNames, uint time) public {
         Election election = new Election(_partyNames, time);
