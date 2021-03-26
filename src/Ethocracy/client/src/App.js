@@ -6,6 +6,8 @@ import getWeb3 from "./getWeb3";
 
 import "./App.css";
 import "react-datepicker/dist/react-datepicker.css";
+import ReactLoading from 'react-loading';
+import { Container, Row, Col } from 'reactstrap';
 
 class App extends Component {
   state = {
@@ -35,8 +37,18 @@ class App extends Component {
   };
 
   render() {
+    // Display loading bars while initiliasing web3 and signing in.
     if (!this.state.loaded) {
-      return <div>Loading Web3, accounts, and contract...</div>;
+      return (
+        <div
+        style={{
+          position: 'absolute', left: '50%', top: '50%',
+          transform: 'translate(-50%, -50%)'
+      }}
+        >
+          <ReactLoading type={"bars"} color={"red"} /> 
+        </div>
+      )
     }
     return (
       <div className="App">
