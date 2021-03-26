@@ -7,7 +7,8 @@ import getWeb3 from "./getWeb3";
 import "./App.css";
 import "react-datepicker/dist/react-datepicker.css";
 import ReactLoading from 'react-loading';
-import { Container, Row, Col } from 'reactstrap';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
 
 class App extends Component {
   state = {
@@ -46,14 +47,13 @@ class App extends Component {
           transform: 'translate(-50%, -50%)'
       }}
         >
-          <ReactLoading type={"bars"} color={"red"} /> 
+          <ReactLoading type={"bars"} color={"grey"} /> 
         </div>
       )
     }
     return (
       <div className="App">
-        <h1>Ethocracy</h1>
-        <NavBar 
+        <Proploader
           // voting={this.voting}
           accounts = {this.accounts}
           electionBuilder={this.electionBuilder}
@@ -64,7 +64,7 @@ class App extends Component {
   }
 }
 
-class NavBar extends Component {
+class Proploader extends Component {
   constructor(props) {
     super(props);
     this.handleAboutUs = this.handleAboutUs.bind(this);
@@ -125,15 +125,27 @@ class NavBar extends Component {
 
   render() {
     return (
+      // .toggle sets the TAB key's effect
+      // .collapse sets the collapse setting, set to collapse under smaller viewports (eg. mobile)
       <div>
-        <button onClick={this.handleAboutUs}>About Us</button>
-        <button onClick={this.handleVote}>Cast Vote</button>
-        <button onClick={this.handleDeployElection}>Deploy Election</button>
-        <button onClick={this.handleElectionStatistics}>Election Statistics</button>
+      <Navbar collapseOnSelect expand="lg" bg="light" expand="lg" >
+        <Navbar.Brand>Ethocracy</Navbar.Brand>
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" /> 
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="navigation-bar">
+           <Nav.Link eventKey="1" onClick={this.handleAboutUs}>About Us</Nav.Link>
+           <Nav.Link eventKey="2" onClick={this.handleVote}>Cast Vote</Nav.Link>
+           <Nav.Link eventKey="3" onClick={this.handleDeployElection}>Deploy Election</Nav.Link>
+           <Nav.Link eventKey="4" onClick={this.handleElectionStatistics}>Election Statistics</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+      <div> 
         {this.state.aboutUsVisibility ? <AboutUs />: " "}
         {this.state.voteVisibility ? <Vote electionBuilder={this.props.electionBuilder} accounts={this.props.accounts} candidates={this.state.candidates} web3={this.props.web3}/>: " "}
         {this.state.deployElectionVisibility ? <DeployElection electionBuilder={this.props.electionBuilder} accounts={this.props.accounts} web3={this.props.web3}/>: " "}
         {this.state.electionStatisticsVisibility ? <ElectionStastics/>: " "}
+      </div>
       </div>
     )
   }
