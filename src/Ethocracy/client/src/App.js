@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import DatePicker from "react-datepicker";
+import {setMinutes, setHours} from "date-fns";
 import ElectionBuilderContract from "./contracts/ElectionBuilder.json";
 import ElectionContract from "./contracts/Election.json";
 import getWeb3 from "./getWeb3";
@@ -189,10 +190,54 @@ class Vote extends Component {
     return (
       <div>
         <p>Vote</p>
-        <SelectElection elections={this.state.elections} contract={this.state.contract} setContract={this.setContract} setSelectedElection={this.setSelectedElection} web3={this.props.web3}/>
-        {this.state.selectedElection ? <SelectCandidate candidates={this.state.candidates} contract={this.state.contract} accounts={this.props.accounts}/> : " "}
-        {this.state.selectedElection ? <ElectionResults contract={this.state.contract} accounts={this.props.accounts}/> : " "}
+        {/* {(!this.state.selectedElection) ? <ElectionAddressList elections={this.state.elections}/> : " "} */}
+        {/* {(!this.state.selectedElection) ? <SelectElection elections={this.state.elections} contract={this.state.contract} setContract={this.setContract} setSelectedElection={this.setSelectedElection} web3={this.props.web3}/> : " "} */}
+        {this.state.selectedElection ? <SelectCandidate candidates={this.state.candidates} contract={this.state.contract} accounts={this.props.accounts}/> : <ElectionAddressList elections={this.state.elections}/>}
+        {this.state.selectedElection ? <ElectionResults contract={this.state.contract} accounts={this.props.accounts}/> : <SelectElection elections={this.state.elections} contract={this.state.contract} setContract={this.setContract} setSelectedElection={this.setSelectedElection} web3={this.props.web3}/>}
         {/* <ElectionResults contract={this.state.contract} accounts={this.props.accounts}/> */}
+      </div>
+    )
+  }
+}
+
+// class ElectionInfo extends Component {
+//   constructor(props) {
+//     super(props);
+//   }
+//   render() {
+//     return (
+//       <div>
+        
+//       </div>
+//     )
+//   }
+// }
+
+class ElectionAddressList extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div>
+        <p>Elections:</p>
+        {
+          this.props.elections.map((election) => <ElectionAddress key={election} electionValue={election}/>)
+        }
+      </div>
+    )
+  }
+}
+
+class ElectionAddress extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div>
+        {this.props.electionValue}
       </div>
     )
   }
@@ -277,6 +322,7 @@ class SelectCandidate extends Component {
   render() {
     return (
       <div>
+        <p>Candidates:</p>
         <form onSubmit={(e) => {
           e.preventDefault()
           this.props.contract.methods.castVote(this.candidateId.value).send({from: this.props.accounts[0]});
@@ -404,6 +450,7 @@ class DeployElection extends Component {
   }
 
   render() {
+    const currentTime = new Date();
     return (
       <div>
         <CandidateList
@@ -420,7 +467,9 @@ class DeployElection extends Component {
           showTimeSelect
           selected={this.state.selectedTime}
           onChange={date => this.setSelectedTime(date)}
-          minDate={new Date()}
+          minDate={currentTime}
+          minTime={setMinutes(currentTime, 60)}
+          maxTime={setHours(setMinutes(currentTime, 45), 23)}
           dateFormat="dd/MM/yyyy h:mm aa"
         />
         <SubmitElection
@@ -434,6 +483,73 @@ class DeployElection extends Component {
       </div>
     )
   }
+
+  // render() {
+  //   const currentTime = new Date();
+  //   return (
+  //     <div>
+  //       <CandidateList
+  //         candidates={this.state.candidates}
+  //       />
+  //       <AddCandidate
+  //         setCandidates={this.setCandidates}
+  //         candidates={this.state.candidates}
+  //       />
+  //       <ElectionType
+  //         setType={this.setType}
+  //       />
+  //       <DatePicker
+  //         showTimeSelect
+  //         selected={this.state.selectedTime}
+  //         onChange={date => this.setSelectedTime(date)}
+  //         minDate={currentTime}
+  //         minTime={setMinutes(currentTime, 60)}
+  //         maxTime={setHours(setMinutes(currentTime, 45), 23)}
+  //         dateFormat="dd/MM/yyyy h:mm aa"
+  //       />
+  //       <SubmitElection
+  //         electionBuilder={this.props.electionBuilder}
+  //         accounts={this.props.accounts}
+  //         candidates={this.state.candidates}
+  //         web3={this.props.web3}
+  //         selectedTime={this.state.selectedTime}
+  //       />
+        
+  //     </div>
+  //   )
+  // }
+
+  // render() {
+  //   return (
+  //     <div>
+  //       <CandidateList
+  //         candidates={this.state.candidates}
+  //       />
+  //       <AddCandidate
+  //         setCandidates={this.setCandidates}
+  //         candidates={this.state.candidates}
+  //       />
+  //       <ElectionType
+  //         setType={this.setType}
+  //       />
+  //       <DatePicker
+  //         showTimeSelect
+  //         selected={this.state.selectedTime}
+  //         onChange={date => this.setSelectedTime(date)}
+  //         minDate={new Date()}
+  //         dateFormat="dd/MM/yyyy h:mm aa"
+  //       />
+  //       <SubmitElection
+  //         electionBuilder={this.props.electionBuilder}
+  //         accounts={this.props.accounts}
+  //         candidates={this.state.candidates}
+  //         web3={this.props.web3}
+  //         selectedTime={this.state.selectedTime}
+  //       />
+        
+  //     </div>
+  //   )
+  // }
 }
 
 class CandidateList extends Component {
