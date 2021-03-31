@@ -16,8 +16,8 @@ contract ElectionBuilder{
     //     }
     // }
     
-    function deployElection(string[] memory _partyNames, uint time) public {
-        Election election = new Election(_partyNames, time);
+    function deployElection(string[] memory _partyNames, uint time, string memory electionKey) public {
+        Election election = new Election(_partyNames, time, electionKey);
         elections.push(election);
         electionCount++;
     }

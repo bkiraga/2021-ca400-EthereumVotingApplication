@@ -7,3 +7,9 @@ it('renders without crashing', () => {
   ReactDOM.render(<App />, div);
   ReactDOM.unmountComponentAtNode(div);
 });
+
+// const generateGreeting = (name) => `Hello ${name}!`;
+// test('test test', () => {
+//   const result = generateGreeting("abc");
+//   expect(result).toBe(`Hello abc!`);
+// })
