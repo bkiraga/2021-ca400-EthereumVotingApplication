@@ -15,6 +15,7 @@ contract Election {
   string[] public ballots;
   uint public partyCount = 0;
   uint public ballotCount = 0;
+  address contractOwner;
   uint startTime = block.timestamp;
   uint allowedTime = 30;
   
@@ -24,9 +25,11 @@ contract Election {
   string public electionKey;
   string public resultKey;
 
-  constructor(string[] memory partyNames, uint _time, string memory _electionKey) public {
+  constructor(string[] memory partyNames, uint _time, string memory _electionKey, string memory _resultKey, address _contractOwner) public {
     allowedTime = _time;
     electionKey = _electionKey;
+    resultKey = _resultKey;
+    contractOwner = _contractOwner;
     for (uint i = 0; i < partyNames.length; i++) {
         addParty(partyNames[i]);
     }

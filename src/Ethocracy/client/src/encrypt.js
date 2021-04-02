@@ -10,16 +10,6 @@ const generateKeys = () => {
     return {public_key, private_key}
 }
 
-// const keys = generateKeys();
-
-// const public_key = keys.public_key;
-// const private_key = keys.private_key;
-// console.log("public key: " + public_key);
-// console.log("private key: " + private_key);
-// const public_key = key.exportKey('public');
-// const private_key = key.exportKey('private');
-
-
 const maskBallot = (ballot, public_key) => {
     const buffer = Buffer.from(ballot);
     const encrypted = crypto.publicEncrypt(public_key, buffer);
@@ -31,12 +21,14 @@ const maskBallot = (ballot, public_key) => {
 // console.log(encrypted);
 
 const unmaskBallot = (ballot, private_key) => {
-    const buffer = Buffer.from(ballot, "base64");
-    const decrypted = crypto.privateDecrypt(private_key, buffer);
+    console.log("bal: " + ballot);
+    console.log("private_key: " + private_key);
+    let buffer = Buffer.from(ballot, "base64");
+    let decrypted = crypto.privateDecrypt(private_key, buffer);
+    // console.log("res: " + decrypted.toString("utf8"));
     return decrypted.toString("utf8");
+    return "abc";
 };
-
-// console.log(unmaskBallot(encrypted, private_key));
 
 module.exports = {
     generateKeys: generateKeys,

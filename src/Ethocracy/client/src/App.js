@@ -387,9 +387,12 @@ class ElectionResults extends Component {
     super(props);
     this.getBallots = this.getBallots.bind(this);
     this.handleElectionResults = this.handleElectionResults.bind(this);
+    this.decryptBallots = this.decryptBallots.bind(this);
     this.state = {
       ballotCount: 0,
       ballots: [],
+      resultKey: "",
+      unmaskedBallotList: [],
       winner: undefined
     }
   }
@@ -410,20 +413,42 @@ class ElectionResults extends Component {
     }
     console.log("All ballots: " + this.state.ballots);
     // return ballots;
+    const resultKey = await this.props.contract.methods.resultKey().call();
+    console.log("resKey: " + resultKey);
+    this.setState(() => {
+      return {
+        resultKey: resultKey
+      }
+    })
+    console.log("ResultKey: " + this.state.resultKey);
   }
 
   async handleElectionResults() {   //////////////////////////////////////////////////////////////////////////////////////////////////////////////this needs work
     // await this.props.contract.methods.countVotes().send({from: this.props.accounts[0]});
     // const ballotCount = await this.props.contract.methods.ballotCount().call();
-    const resultKey = await this.props.contract.methods.resultKey().call;
+    // const resultKey = await this.props.contract.methods.resultKey().call;
     // let winnerParty = await this.props.contract.methods.winningParty().call();
+    // const encrypt = require("./encrypt");
+    // const winnerParty = "";
+    await this.getBallots();
+    this.decryptBallots(this.state.resultKey);
+  }
+    // for (let i = 0; i < this.state.ballotCount; i++){
+    //   console.log("problem" + this.state.ballots[i]);
+    //   let unmaskedBallot = encrypt.unmaskBallot(this.state.ballots[i], resultKey);
+    //   unmaskedBallotList.push(unmaskedBallot);
+    // }
+    // console.log("result: " + unmaskedBallotList);
+
+  decryptBallots(resultKey) {
     const encrypt = require("./encrypt");
-    const winnerParty = "";
-    let unmaskedBallotList = [];
-    this.getBallots();
     for (let i = 0; i < this.state.ballotCount; i++){
+      console.log("problem: " + this.state.ballots[i]);
       let unmaskedBallot = encrypt.unmaskBallot(this.state.ballots[i], resultKey);
+      this.state.unmaskedBallotList.push(unmaskedBallot);
     }
+    console.log("result: " + this.state.unmaskedBallotList);
+  }
 
     // const unmaskedBallots = [];
     // const maskedBallot = await this.props.contract.methods.ballots(0).call();
@@ -437,12 +462,12 @@ class ElectionResults extends Component {
     // }
     // console.log(unmaskedBallots);
     // console.log();
-    this.setState(() => {
-      return {
-        winner: winnerParty
-      }
-    })
-  }
+  //   this.setState(() => {
+  //     return {
+  //       winner: winnerParty
+  //     }
+  //   })
+  // }
 
   render() {
     return (
@@ -776,8 +801,9 @@ class SubmitElection extends Component {
     const encrypt = require("./encrypt");
     const keys = encrypt.generateKeys();
     const electionKey = keys.public_key;
-    console.log(keys.public_key);    //
-    await this.props.electionBuilder.methods.deployElection(this.props.candidates, time, electionKey).send({from: this.props.accounts[0]});
+    const resultKey = keys.private_key;
+    const contractOwner = await this.props.electionBuilder.methods.contractOwner().call(); ///////////////might need fix
+    await this.props.electionBuilder.methods.deployElection(this.props.candidates, time, electionKey, resultKey, contractOwner).send({from: this.props.accounts[0]});
   }
 
   //
