@@ -167,7 +167,6 @@ class Vote extends Component {
         elections: elections
       }
     })
-    console.log(this.state.elections);
   }
 
   setContract(newContract) {
@@ -346,11 +345,10 @@ class SelectCandidate extends Component {
         candidates: parties
       }
     })
-  }/////////////////////////
+  }
 
   hideVote(vote) {
     const encrypt = require("./encrypt");
-    // let electionKey = await this.props.contract.methods.electionKey().call();
     const ballot = encrypt.maskBallot(vote, this.state.electionKey);
     return ballot;
   }
@@ -361,14 +359,7 @@ class SelectCandidate extends Component {
         <p>Candidates:</p>
         <form onSubmit={(e) => {
           e.preventDefault()
-
-          // this.props.contract.methods.castVote(this.hideVote(this.candidateId.value).toString()).send({from: this.props.accounts[0]});
-          // this.hideVote(this.candidateId.value);
-          // this.props.contract.methods.castVote(this.state.ballot).send({from: this.props.accounts[0]});
-          // console.log("Key: " + this.state.electionKey);
-          // this.props.contract.methods.castVote("votessuccess").send({from: this.props.accounts[0]});
           this.props.contract.methods.castVote(this.hideVote(this.candidateId.value)).send({from: this.props.accounts[0]});
-          // this.props.contract.methods.castVote(this.candidateId.value).send({from: this.props.accounts[0]});
           }}>
           <select ref={(input) => this.candidateId = input} className='form-control'>
             {this.state.candidates.map((candidate) => {
@@ -387,7 +378,6 @@ class ElectionResults extends Component {
     super(props);
     this.getBallots = this.getBallots.bind(this);
     this.handleElectionResults = this.handleElectionResults.bind(this);
-    this.decryptBallots = this.decryptBallots.bind(this);
     this.state = {
       ballotCount: 0,
       ballots: [],
@@ -398,76 +388,33 @@ class ElectionResults extends Component {
   }
 
   async getBallots() {
-    // let ballots = [];
     const ballotCount = await this.props.contract.methods.ballotCount().call();
     this.setState(() => {
       return {
         ballotCount: ballotCount
       }
     })
-    console.log("ballot count: " + this.state.ballotCount);
     for (let i = 0; i < ballotCount; i++){
       let ballot = await this.props.contract.methods.ballots(i).call();
-      console.log("ballot: " + ballot);
       this.state.ballots.push(ballot);
     }
-    console.log("All ballots: " + this.state.ballots);
-    // return ballots;
     const resultKey = await this.props.contract.methods.resultKey().call();
-    console.log("resKey: " + resultKey);
     this.setState(() => {
       return {
         resultKey: resultKey
       }
     })
-    console.log("ResultKey: " + this.state.resultKey);
   }
 
-  async handleElectionResults() {   //////////////////////////////////////////////////////////////////////////////////////////////////////////////this needs work
-    // await this.props.contract.methods.countVotes().send({from: this.props.accounts[0]});
-    // const ballotCount = await this.props.contract.methods.ballotCount().call();
-    // const resultKey = await this.props.contract.methods.resultKey().call;
-    // let winnerParty = await this.props.contract.methods.winningParty().call();
-    // const encrypt = require("./encrypt");
-    // const winnerParty = "";
+  async handleElectionResults() {
     await this.getBallots();
-    this.decryptBallots(this.state.resultKey);
-  }
-    // for (let i = 0; i < this.state.ballotCount; i++){
-    //   console.log("problem" + this.state.ballots[i]);
-    //   let unmaskedBallot = encrypt.unmaskBallot(this.state.ballots[i], resultKey);
-    //   unmaskedBallotList.push(unmaskedBallot);
-    // }
-    // console.log("result: " + unmaskedBallotList);
-
-  decryptBallots(resultKey) {
     const encrypt = require("./encrypt");
     for (let i = 0; i < this.state.ballotCount; i++){
-      console.log("problem: " + this.state.ballots[i]);
-      let unmaskedBallot = encrypt.unmaskBallot(this.state.ballots[i], resultKey);
+      let unmaskedBallot = encrypt.unmaskBallot(this.state.ballots[i], this.state.resultKey);
       this.state.unmaskedBallotList.push(unmaskedBallot);
     }
     console.log("result: " + this.state.unmaskedBallotList);
   }
-
-    // const unmaskedBallots = [];
-    // const maskedBallot = await this.props.contract.methods.ballots(0).call();
-    // console.log(maskedBallot);
-    // for (let i = 0; i < ballotCount; i++){
-    //   const maskedBallot = await this.props.contract.methods.ballots().call();
-    //   console.log(maskedBallot);
-    //   // const unmaskedBallot = encrypt.unmaskBallot(maskedBallot, resultKey);
-    //   // unmaskedBallots.push(unmaskedBallot);
-    //   ///////////////////////////////////////////
-    // }
-    // console.log(unmaskedBallots);
-    // console.log();
-  //   this.setState(() => {
-  //     return {
-  //       winner: winnerParty
-  //     }
-  //   })
-  // }
 
   render() {
     return (
@@ -788,16 +735,15 @@ class SubmitElection extends Component {
   constructor(props){
     super(props);
     this.handleDeployElection = this.handleDeployElection.bind(this);
-    this.resp = this.resp.bind(this);
   }
 
   async handleDeployElection() {
     const selectedTimestamp = Math.ceil(this.props.selectedTime.getTime() / 1000);
-    console.log(selectedTimestamp);
+    // console.log(selectedTimestamp);
     const currentTimestamp = Math.floor(Date.now() / 1000);
-    console.log(currentTimestamp);
+    // console.log(currentTimestamp);
     const time = selectedTimestamp - currentTimestamp;
-    console.log(time);
+    // console.log(time);
     const encrypt = require("./encrypt");
     const keys = encrypt.generateKeys();
     const electionKey = keys.public_key;
@@ -806,22 +752,11 @@ class SubmitElection extends Component {
     await this.props.electionBuilder.methods.deployElection(this.props.candidates, time, electionKey, resultKey, contractOwner).send({from: this.props.accounts[0]});
   }
 
-  //
-
-  async resp() {
-    let address = await this.props.electionBuilder.methods.elections(0).call();
-    let contract = await new this.props.web3.eth.Contract(ElectionContract.abi, address);
-    console.log(contract);
-    let candidate = await contract.methods.parties(1).call()
-    // console.log(candidate);
-  }
-
   render() {
     return (
       <div>
         <p>Deploy</p>
         <button onClick={this.handleDeployElection}>Deploy Election</button>
-        <button onClick={this.resp}>resp</button>
       </div>
     )
   }
