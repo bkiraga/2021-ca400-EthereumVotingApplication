@@ -378,12 +378,14 @@ class ElectionResults extends Component {
   constructor(props) {
     super(props);
     this.getBallots = this.getBallots.bind(this);
+    this.getCandidates = this.getCandidates.bind(this);
     this.handleElectionResults = this.handleElectionResults.bind(this);
     this.state = {
       ballotCount: 0,
       ballots: [],
       resultKey: "",
       unmaskedBallotList: [],
+      candidates: [],
       winner: undefined
     }
   }
@@ -413,15 +415,29 @@ class ElectionResults extends Component {
     })
   }
 
+  async getCandidates() {
+    let parties = [];
+    let partyCount = await this.props.contract.methods.partyCount().call();
+    for (let i = 0; i < partyCount; i++) {
+      let party = await this.props.contract.methods.parties(i).call();
+      parties.push(party)
+    }
+    this.setState(() => {
+      return {
+        candidates: parties
+      }
+    })
+  }
+
   async handleElectionResults() {
     let unmaskedBallots = [];
     await this.getBallots();
     const encrypt = require("./encrypt");
-    console.log("ballot count: " + this.state.ballotCount)
-    console.log("masked ballots: " + this.state.ballots);
+    // console.log("ballot count: " + this.state.ballotCount)
+    // console.log("masked ballots: " + this.state.ballots);
     for (let i = 0; i < this.state.ballotCount; i++){
       let unmaskedBallot = encrypt.unmaskBallot(this.state.ballots[i], this.state.resultKey);
-      console.log("ballot: " + unmaskedBallot);
+      // console.log("ballot: " + unmaskedBallot);
       unmaskedBallots.push(unmaskedBallot);
     }
     // this.state.unmaskedBallotList = unmaskedBallots;
@@ -431,6 +447,41 @@ class ElectionResults extends Component {
       }
     })
     console.log("result: " + this.state.unmaskedBallotList);
+    await this.getCandidates();
+    let resultMap = new Map();
+    for (let i = 0; i < this.state.candidates.length; i++) {
+      resultMap.set(this.state.candidates[i].name, 0);
+      // resultMap[this.state.candidates[i].name] = 0;
+    }
+    console.log("resultMap1: " + JSON.stringify(resultMap));
+    for (let i = 0; i < this.state.unmaskedBallotList.length; i++) {
+      // console.log("a");
+      for (let [key, value] of resultMap.entries()) {
+        // console.log("b");
+        if (key === this.state.candidates[parseInt(this.state.unmaskedBallotList[i], 10)].name) {
+          console.log("success");
+          // value += 1;
+          resultMap.set(key, value+1);
+        }
+        // console.log(key + ' = ' + value);
+      }
+      // resultMap.forEach((value, key) => {
+      //   console.log("key: " + key);
+      //   console.log("name: " + this.state.candidates[parseInt(this.state.unmaskedBallotList[i], 10)].name);
+        // if (key === this.state.candidates[parseInt(this.state.unmaskedBallotList[i], 10)].name) {
+        //   console.log("success");
+        //   value += 1;
+        // }
+      // })
+    }
+    for (let [key,value] of resultMap.entries()) {
+      console.log(key + ' = ' + value);
+    }
+    // console.log("Candidates: " + this.state.candidates[1].name);
+    // console.log("resultMap: " + JSON.stringify(resultMap));
+    // for (let value of resultMap.values()) {
+    //   console.log("value: " + value);
+    // }
   }
 
   render() {
