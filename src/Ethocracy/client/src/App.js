@@ -359,6 +359,7 @@ class SelectCandidate extends Component {
         <p>Candidates:</p>
         <form onSubmit={(e) => {
           e.preventDefault()
+          console.log("candidate id: " + this.candidateId.value);
           this.props.contract.methods.castVote(this.hideVote(this.candidateId.value)).send({from: this.props.accounts[0]});
           }}>
           <select ref={(input) => this.candidateId = input} className='form-control'>
@@ -389,6 +390,7 @@ class ElectionResults extends Component {
 
   async getBallots() {
     const ballotCount = await this.props.contract.methods.ballotCount().call();
+    let ballots = [];
     this.setState(() => {
       return {
         ballotCount: ballotCount
@@ -396,8 +398,13 @@ class ElectionResults extends Component {
     })
     for (let i = 0; i < ballotCount; i++){
       let ballot = await this.props.contract.methods.ballots(i).call();
-      this.state.ballots.push(ballot);
+      ballots.push(ballot);
     }
+    this.setState(() => {
+      return {
+        ballots: ballots
+      }
+    })
     const resultKey = await this.props.contract.methods.resultKey().call();
     this.setState(() => {
       return {
@@ -407,12 +414,22 @@ class ElectionResults extends Component {
   }
 
   async handleElectionResults() {
+    let unmaskedBallots = [];
     await this.getBallots();
     const encrypt = require("./encrypt");
+    console.log("ballot count: " + this.state.ballotCount)
+    console.log("masked ballots: " + this.state.ballots);
     for (let i = 0; i < this.state.ballotCount; i++){
       let unmaskedBallot = encrypt.unmaskBallot(this.state.ballots[i], this.state.resultKey);
-      this.state.unmaskedBallotList.push(unmaskedBallot);
+      console.log("ballot: " + unmaskedBallot);
+      unmaskedBallots.push(unmaskedBallot);
     }
+    // this.state.unmaskedBallotList = unmaskedBallots;
+    this.setState(() => {
+      return {
+        unmaskedBallotList: unmaskedBallots
+      }
+    })
     console.log("result: " + this.state.unmaskedBallotList);
   }
 
