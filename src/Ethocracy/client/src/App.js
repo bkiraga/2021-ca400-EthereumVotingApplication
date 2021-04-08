@@ -7,6 +7,7 @@ import getWeb3 from "./getWeb3";
 
 import "./App.css";
 import "react-datepicker/dist/react-datepicker.css";
+import * as ReactBootStrap from "react-bootstrap";
 
 class App extends Component {
   state = {
@@ -386,6 +387,7 @@ class ElectionResults extends Component {
       resultKey: "",
       unmaskedBallotList: [],
       candidates: [],
+      results: [],
       winner: undefined
     }
   }
@@ -433,55 +435,67 @@ class ElectionResults extends Component {
     let unmaskedBallots = [];
     await this.getBallots();
     const encrypt = require("./encrypt");
-    // console.log("ballot count: " + this.state.ballotCount)
-    // console.log("masked ballots: " + this.state.ballots);
     for (let i = 0; i < this.state.ballotCount; i++){
       let unmaskedBallot = encrypt.unmaskBallot(this.state.ballots[i], this.state.resultKey);
-      // console.log("ballot: " + unmaskedBallot);
       unmaskedBallots.push(unmaskedBallot);
     }
-    // this.state.unmaskedBallotList = unmaskedBallots;
     this.setState(() => {
       return {
         unmaskedBallotList: unmaskedBallots
       }
     })
-    console.log("result: " + this.state.unmaskedBallotList);
     await this.getCandidates();
     let resultMap = new Map();
     for (let i = 0; i < this.state.candidates.length; i++) {
       resultMap.set(this.state.candidates[i].name, 0);
-      // resultMap[this.state.candidates[i].name] = 0;
     }
-    console.log("resultMap1: " + JSON.stringify(resultMap));
     for (let i = 0; i < this.state.unmaskedBallotList.length; i++) {
-      // console.log("a");
       for (let [key, value] of resultMap.entries()) {
-        // console.log("b");
         if (key === this.state.candidates[parseInt(this.state.unmaskedBallotList[i], 10)].name) {
-          console.log("success");
-          // value += 1;
           resultMap.set(key, value+1);
         }
-        // console.log(key + ' = ' + value);
       }
-      // resultMap.forEach((value, key) => {
-      //   console.log("key: " + key);
-      //   console.log("name: " + this.state.candidates[parseInt(this.state.unmaskedBallotList[i], 10)].name);
-        // if (key === this.state.candidates[parseInt(this.state.unmaskedBallotList[i], 10)].name) {
-        //   console.log("success");
-        //   value += 1;
-        // }
-      // })
     }
+    let results = [];
     for (let [key,value] of resultMap.entries()) {
-      console.log(key + ' = ' + value);
+      results.push({candidate: key, votes: value});
     }
-    // console.log("Candidates: " + this.state.candidates[1].name);
-    // console.log("resultMap: " + JSON.stringify(resultMap));
-    // for (let value of resultMap.values()) {
-    //   console.log("value: " + value);
-    // }
+
+    for (let i = 0; i < results.length; i++) {
+      let min = i;
+      for (let j = i+1; j < results.length; j++) {
+        if (results[j].votes < results[min].votes){
+          min = j
+        }
+      }
+      if (min !== i) {
+        let tmp = results[i];
+        results[i] = results[min];
+        results[min] = tmp;
+      }
+    }
+    results = results.reverse();
+
+    this.setState(() => {
+      // const firstPlace = results[results.length-1];
+      // const secondPlace = results[results.length-2];
+      const firstPlace = results[0];
+      const secondPlace = results[1];
+      if (firstPlace.votes !== secondPlace.votes) {
+        return {
+          results: results,
+          winner: firstPlace.candidate
+        }
+      } else {
+        return {
+          results: results,
+          winner: "Draw"
+        }
+      }
+    })
+    console.log(this.state.winner);
+
+
   }
 
   render() {
@@ -489,7 +503,7 @@ class ElectionResults extends Component {
       <div>
         <p>Election Results</p>
         <button onClick={this.handleElectionResults}>Get Result</button>
-        {this.state.winner !== undefined ? <ResultsTable winner={this.state.winner}/> : " "}
+        {this.state.results.length !== 0 ? <ResultsTable winner={this.state.winner} results={this.state.results}/> : " "}
       </div>
     )
   }
@@ -497,30 +511,65 @@ class ElectionResults extends Component {
 
 class ResultsTable extends Component {
   render() {
-    console.log(this.props.winner)
     return (
       <div>
-      <p>Winner:{this.props.winner.name}</p>
-      <p>Vote: {this.props.winner.votes}</p>
-
-        {/* <table>
-          <thread>
+        <p>Winner: {this.props.winner}</p>
+        <ReactBootStrap.Table striped bordered hover>
+          <thead>
             <tr>
-              <th>Name</th>
+              <th>Candidate</th>
               <th>Votes</th>
             </tr>
-          </thread>
+          </thead>
           <tbody>
-            <tr>
-              <th>{this.props.winner.name}</th>
-              <td>{this.props.winner.votes}</td>
-            </tr>
+            {this.props.results.map((result, index) => <ResultEntry key={index} candidate={result.candidate} votes={result.votes}/>)}
           </tbody>
-        </table> */}
+        </ReactBootStrap.Table>
       </div>
     )
   }
 }
+
+class ResultEntry extends Component {
+  render() {
+    return (
+        <tr>
+          <td>{this.props.candidate}</td>
+          <td>{this.props.votes}</td>
+        </tr>
+    )
+  }
+}
+
+// class ElectionAddressList extends Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <p>Elections:</p>
+//         {
+//           this.props.elections.map((election) => <ElectionAddress key={election} electionValue={election}/>)
+//         }
+//       </div>
+//     )
+//   }
+// }
+
+// class ElectionAddress extends Component {
+//   constructor(props) {
+//     super(props);
+//   }
+//   render() {
+//     return (
+//       <div>
+//         {this.props.electionValue}
+//       </div>
+//     )
+//   }
+// }
 
 class DeployElection extends Component {
   constructor(props) {
