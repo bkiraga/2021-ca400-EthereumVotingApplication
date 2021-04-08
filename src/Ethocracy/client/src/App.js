@@ -651,9 +651,7 @@ class DeployElection extends Component {
           showTimeSelect
           selected={this.state.selectedTime}
           onChange={date => this.setSelectedTime(date)}
-          minDate={currentTime}
-          minTime={setMinutes(currentTime, 60)}
-          maxTime={setHours(setMinutes(currentTime, 45), 23)}
+          minDate={setHours(currentTime, 24)}
           dateFormat="dd/MM/yyyy h:mm aa"
         />
         <SubmitElection
@@ -667,73 +665,6 @@ class DeployElection extends Component {
       </div>
     )
   }
-
-  // render() {
-  //   const currentTime = new Date();
-  //   return (
-  //     <div>
-  //       <CandidateList
-  //         candidates={this.state.candidates}
-  //       />
-  //       <AddCandidate
-  //         setCandidates={this.setCandidates}
-  //         candidates={this.state.candidates}
-  //       />
-  //       <ElectionType
-  //         setType={this.setType}
-  //       />
-  //       <DatePicker
-  //         showTimeSelect
-  //         selected={this.state.selectedTime}
-  //         onChange={date => this.setSelectedTime(date)}
-  //         minDate={currentTime}
-  //         minTime={setMinutes(currentTime, 60)}
-  //         maxTime={setHours(setMinutes(currentTime, 45), 23)}
-  //         dateFormat="dd/MM/yyyy h:mm aa"
-  //       />
-  //       <SubmitElection
-  //         electionBuilder={this.props.electionBuilder}
-  //         accounts={this.props.accounts}
-  //         candidates={this.state.candidates}
-  //         web3={this.props.web3}
-  //         selectedTime={this.state.selectedTime}
-  //       />
-        
-  //     </div>
-  //   )
-  // }
-
-  // render() {
-  //   return (
-  //     <div>
-  //       <CandidateList
-  //         candidates={this.state.candidates}
-  //       />
-  //       <AddCandidate
-  //         setCandidates={this.setCandidates}
-  //         candidates={this.state.candidates}
-  //       />
-  //       <ElectionType
-  //         setType={this.setType}
-  //       />
-  //       <DatePicker
-  //         showTimeSelect
-  //         selected={this.state.selectedTime}
-  //         onChange={date => this.setSelectedTime(date)}
-  //         minDate={new Date()}
-  //         dateFormat="dd/MM/yyyy h:mm aa"
-  //       />
-  //       <SubmitElection
-  //         electionBuilder={this.props.electionBuilder}
-  //         accounts={this.props.accounts}
-  //         candidates={this.state.candidates}
-  //         web3={this.props.web3}
-  //         selectedTime={this.state.selectedTime}
-  //       />
-        
-  //     </div>
-  //   )
-  // }
 }
 
 // class ElectionName extends Component {
