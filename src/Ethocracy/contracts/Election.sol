@@ -25,11 +25,16 @@ contract Election {
   string public electionKey;
   string public resultKey;
 
-  constructor(string[] memory partyNames, uint _time, string memory _electionKey, string memory _resultKey, address _contractOwner) public {
+  bytes32[] public hashedVoterIds;
+  uint validVoterCount;
+
+  constructor(string[] memory partyNames, uint _time, string memory _electionKey, string memory _resultKey, address _contractOwner, bytes32[] memory _hashedVoterIds, uint _validVoterCount) public {
     allowedTime = _time;
     electionKey = _electionKey;
     resultKey = _resultKey;
     contractOwner = _contractOwner;
+    hashedVoterIds = _hashedVoterIds;
+    validVoterCount = _validVoterCount;
     for (uint i = 0; i < partyNames.length; i++) {
         addParty(partyNames[i]);
     }
@@ -48,9 +53,20 @@ contract Election {
       partyCount ++;
   }
 
-  function castVote (string memory _vote) public {
+  function validateUser (bytes memory _voterId) public view returns (bool) {
+    bytes32 hashedVoterId = sha256(_voterId);
+    for (uint i = 0; i < validVoterCount; i++) {
+        if (hashedVoterId == hashedVoterIds[i]) {
+            return true;
+        }
+    }
+    return false;
+  }
+
+  function castVote (string memory _vote, bytes memory _voterId) public {
       // require(block.timestamp - startTime < allowedTime);
       // require(!voters[msg.sender]);
+      require(validateUser(_voterId) == true);
       ballots.push(_vote);
       ballotCount++;
       voters[msg.sender] = true;

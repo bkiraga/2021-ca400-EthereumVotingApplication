@@ -17,8 +17,8 @@ contract ElectionBuilder{
     //     }
     // }
     
-    function deployElection(string[] memory _partyNames, uint time, string memory electionKey, string memory resultKey, address _contractOwner) public {
-        Election election = new Election(_partyNames, time, electionKey, resultKey, contractOwner);
+    function deployElection(string[] memory _partyNames, uint time, string memory electionKey, string memory resultKey, address _contractOwner, bytes32[] memory hashedVoterIds, uint validVoterCount) public {
+        Election election = new Election(_partyNames, time, electionKey, resultKey, contractOwner, hashedVoterIds, validVoterCount);
         elections.push(election);
         electionCount++;
     }

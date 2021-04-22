@@ -360,8 +360,9 @@ class SelectCandidate extends Component {
         <p>Candidates:</p>
         <form onSubmit={(e) => {
           e.preventDefault()
+          // const encrypt = require("./encrypt");
           console.log("candidate id: " + this.candidateId.value);
-          this.props.contract.methods.castVote(this.hideVote(this.candidateId.value)).send({from: this.props.accounts[0]});
+          this.props.contract.methods.castVote(this.hideVote(this.candidateId.value), "0x1234").send({from: this.props.accounts[0]});
           }}>
           <select ref={(input) => this.candidateId = input} className='form-control'>
             {this.state.candidates.map((candidate) => {
@@ -579,6 +580,7 @@ class DeployElection extends Component {
     this.setSelectedTime = this.setSelectedTime.bind(this);
     this.state = {
       candidates: [],
+      validVoters: ["1234", "5678"],
       name: "",
       electionType: 'FPP',
       selectedTime: new Date(),
@@ -625,6 +627,8 @@ class DeployElection extends Component {
     }
   }
 
+  // setValidVoters(validVoters)
+
   setSelectedTime(date) {
     this.setState(() => {
       return {
@@ -654,12 +658,16 @@ class DeployElection extends Component {
           minDate={setHours(currentTime, 24)}
           dateFormat="dd/MM/yyyy h:mm aa"
         />
+        <ValidVoterPicker
+          validVoters={this.state.validVoters}
+        />
         <SubmitElection
           electionBuilder={this.props.electionBuilder}
           accounts={this.props.accounts}
           candidates={this.state.candidates}
           web3={this.props.web3}
           selectedTime={this.state.selectedTime}
+          validVoters={this.state.validVoters}
         />
         
       </div>
@@ -779,6 +787,17 @@ class ElectionType extends Component {
   }
 }
 
+class ValidVoterPicker extends Component {
+  constructor(props){
+    super(props);
+  }
+  render() {
+    return (
+      <div>abc</div>
+    )
+  }
+}
+
 class SubmitElection extends Component {
   constructor(props){
     super(props);
@@ -797,7 +816,19 @@ class SubmitElection extends Component {
     const electionKey = keys.public_key;
     const resultKey = keys.private_key;
     const contractOwner = await this.props.electionBuilder.methods.contractOwner().call(); ///////////////might need fix
-    await this.props.electionBuilder.methods.deployElection(this.props.candidates, time, electionKey, resultKey, contractOwner).send({from: this.props.accounts[0]});
+    let hashedVoterIds = [];
+    for (let i = 0; i < this.props.validVoters.length; i++) {
+      //  let hash = hashedVoterIds.push(encrypt.hashVoterId(this.props.validVoters[i]));
+      let hash = encrypt.hashVoterId(this.props.validVoters[i]);
+      // let b = this.props.web3.utils.asciiToHex(hash);
+      // console.log(b);
+      // hashedVoterIds.push(b);
+      hashedVoterIds.push(hash);
+    }
+    const validVoterCount = hashedVoterIds.length;
+    console.log("abc: " + hashedVoterIds);
+    
+    await this.props.electionBuilder.methods.deployElection(this.props.candidates, time, electionKey, resultKey, contractOwner, hashedVoterIds, validVoterCount).send({from: this.props.accounts[0]});
   }
 
   render() {

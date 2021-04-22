@@ -1,5 +1,6 @@
 const NodeRsa = require('node-rsa');
 const crypto = require('crypto');
+const CryptoJS = require('crypto-js');
 
 const generateKeys = () => {
     const key = new NodeRsa({b:512});
@@ -21,8 +22,17 @@ const unmaskBallot = (ballot, private_key) => {
     return decrypted.toString("utf8");
 };
 
+const hashVoterId = (id) => {
+    const hash = CryptoJS.SHA256(CryptoJS.enc.Hex.parse(id));
+    return "0x" + hash.toString();
+}
+
+// console.log(hashVoterId("1234"));
+// hashVoterId("1234");
+
 module.exports = {
     generateKeys: generateKeys,
     maskBallot: maskBallot,
-    unmaskBallot: unmaskBallot
+    unmaskBallot: unmaskBallot,
+    hashVoterId: hashVoterId
 }
