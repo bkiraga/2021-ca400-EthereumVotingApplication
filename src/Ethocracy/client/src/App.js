@@ -594,9 +594,10 @@ class DeployElection extends Component {
     this.setCandidates = this.setCandidates.bind(this);
     this.setType = this.setType.bind(this);
     this.setSelectedTime = this.setSelectedTime.bind(this);
+    this.setValidVoters = this.setValidVoters.bind(this);
     this.state = {
       candidates: [],
-      validVoters: ["1234", "5678"],
+      validVoters: [],
       name: "",
       electionType: 'FPP',
       selectedTime: new Date(),
@@ -643,7 +644,13 @@ class DeployElection extends Component {
     }
   }
 
-  // setValidVoters(validVoters)
+  setValidVoters(validVoters) {
+    this.setState(() => {
+      return {
+        validVoters: validVoters
+      }
+    })
+  }
 
   setSelectedTime(date) {
     this.setState(() => {
@@ -674,8 +681,8 @@ class DeployElection extends Component {
           minDate={setHours(currentTime, 24)}
           dateFormat="dd/MM/yyyy h:mm aa"
         />
-        <ValidVoterPicker
-          validVoters={this.state.validVoters}
+        <ValidVoterSubmit
+          setValidVoters={this.setValidVoters}
         />
         <SubmitElection
           electionBuilder={this.props.electionBuilder}
@@ -803,13 +810,29 @@ class ElectionType extends Component {
   }
 }
 
-class ValidVoterPicker extends Component {
+class ValidVoterSubmit extends Component {
   constructor(props){
     super(props);
+    this.handleUploadIdFile = this.handleUploadIdFile.bind(this);
   }
+
+  handleUploadIdFile(e) {
+    e.preventDefault();
+    let file = e.target.files;
+    let reader = new FileReader();
+    reader.readAsText(file[0]);
+    let validVoters = [];
+    reader.onload = (e) => {
+      const fileContent = e.target.result.trim().split(",");
+      this.props.setValidVoters(fileContent);
+    }
+  }
+
   render() {
     return (
-      <div>abc</div>
+      <div>
+        <input type="file" name="file" onChange={this.handleUploadIdFile}/>
+      </div>
     )
   }
 }
@@ -827,18 +850,16 @@ class SubmitElection extends Component {
     // console.log(currentTimestamp);
     const time = selectedTimestamp - currentTimestamp;
     // console.log(time);
+
     const encrypt = require("./encrypt");
     const keys = encrypt.generateKeys();
     const electionKey = keys.public_key;
     const resultKey = keys.private_key;
     const contractOwner = await this.props.electionBuilder.methods.contractOwner().call(); ///////////////might need fix
+    
     let hashedVoterIds = [];
     for (let i = 0; i < this.props.validVoters.length; i++) {
-      //  let hash = hashedVoterIds.push(encrypt.hashVoterId(this.props.validVoters[i]));
       let hash = encrypt.hashVoterId(this.props.validVoters[i]);
-      // let b = this.props.web3.utils.asciiToHex(hash);
-      // console.log(b);
-      // hashedVoterIds.push(b);
       hashedVoterIds.push(hash);
     }
     const validVoterCount = hashedVoterIds.length;
