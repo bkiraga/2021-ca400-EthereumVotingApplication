@@ -318,9 +318,11 @@ class SelectCandidate extends Component {
     super(bind);
     this.getCandidates = this.getCandidates.bind(this);
     this.hideVote = this.hideVote.bind(this);
+    this.handleInputVoterId = this.handleInputVoterId.bind(this);
     this.state = {
       candidates: [],
-      electionKey: ""
+      electionKey: "",
+      voterId: ""
     }
   }
 
@@ -330,6 +332,17 @@ class SelectCandidate extends Component {
     this.setState(() => {
       return {
         electionKey: electionKey
+      }
+    })
+  }
+
+  handleInputVoterId(e) {
+    e.preventDefault();
+    const voterId = e.target.elements.inputVoterId.value.trim()
+    console.log(voterId);
+    this.setState(() => {
+      return {
+        voterId: voterId
       }
     })
   }
@@ -357,19 +370,22 @@ class SelectCandidate extends Component {
   render() {
     return (
       <div>
+        <form onSubmit={this.handleInputVoterId}>
+        <input type="text" name="inputVoterId"/>
+        <button disabled={this.state.voterId !== ""}>Input Voter ID</button>
+        </form>
         <p>Candidates:</p>
         <form onSubmit={(e) => {
           e.preventDefault()
-          // const encrypt = require("./encrypt");
           console.log("candidate id: " + this.candidateId.value);
-          this.props.contract.methods.castVote(this.hideVote(this.candidateId.value), "0x1234").send({from: this.props.accounts[0]});
+          this.props.contract.methods.castVote(this.hideVote(this.candidateId.value), "0x" + this.state.voterId).send({from: this.props.accounts[0]});
           }}>
           <select ref={(input) => this.candidateId = input} className='form-control'>
             {this.state.candidates.map((candidate) => {
               return <option key={candidate.id} value={candidate.id}>{candidate.name}</option>
             })}
           </select>
-          <button type='submit' className='btn btn-primary'>Vote</button>
+          <button type='submit' disabled={this.state.voterId === ""}>Vote</button>
         </form>
       </div>
     )
