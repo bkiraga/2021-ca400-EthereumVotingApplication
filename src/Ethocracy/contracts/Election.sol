@@ -10,8 +10,9 @@ contract Election {
   }
 
   mapping(address => bool) public voters;
-//   mapping(address => string) public ballots;
   mapping(uint => Party) public parties;
+  mapping(bytes => bool) public spentVoterIds;
+
   string[] public ballots;
   uint public partyCount = 0;
   uint public ballotCount = 0;
@@ -66,32 +67,11 @@ contract Election {
   function castVote (string memory _vote, bytes memory _voterId) public {
       // require(block.timestamp - startTime < allowedTime);
       // require(!voters[msg.sender]);
+      require(!spentVoterIds[_voterId]);
       require(validateUser(_voterId) == true);
       ballots.push(_vote);
       ballotCount++;
       voters[msg.sender] = true;
+      spentVoterIds[_voterId] = true;
   }
-
-//   function castVote (uint _id) public {
-//       require(block.timestamp - startTime < allowedTime);
-//       require(!voters[msg.sender]);
-//       require(_id >= 0 && _id <= partyCount);
-//       parties[_id].votes ++;
-//       voters[msg.sender] = true;
-//   }
-  
-//   function countVotes () public {
-//       require(block.timestamp - startTime >= allowedTime);
-//       for (uint i = 0; i < partyCount; i++){
-//           if (parties[i].votes > winnerVoteCount) {
-//               winningParty = parties[i];
-//               winnerVoteCount = parties[i].votes;
-//           }
-//       }
-// //   }
-//   function countVotes () public view returns (string[]){
-//       return ballots;
-//     //   require(block.timestamp - startTime >= allowedTime);
-
-//   }
 }
