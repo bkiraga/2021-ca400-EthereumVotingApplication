@@ -26,8 +26,6 @@ const hashVoterId = (id) => {
     return "0x" + hash.toString();
 }
 
-generateKeys();
-
 module.exports = {
     generateKeys: generateKeys,
     maskBallot: maskBallot,
