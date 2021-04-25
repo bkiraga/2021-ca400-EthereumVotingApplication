@@ -15,7 +15,6 @@ const maskBallot = (ballot, public_key) => {
     return encrypted.toString("base64");
 };
 
-
 const unmaskBallot = (ballot, private_key) => {
     let buffer = Buffer.from(ballot, "base64");
     let decrypted = crypto.privateDecrypt(private_key, buffer);
@@ -27,8 +26,7 @@ const hashVoterId = (id) => {
     return "0x" + hash.toString();
 }
 
-// console.log(hashVoterId("1234"));
-// hashVoterId("1234");
+generateKeys();
 
 module.exports = {
     generateKeys: generateKeys,

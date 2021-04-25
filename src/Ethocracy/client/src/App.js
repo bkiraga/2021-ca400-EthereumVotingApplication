@@ -494,8 +494,6 @@ class ElectionResults extends Component {
     results = results.reverse();
 
     this.setState(() => {
-      // const firstPlace = results[results.length-1];
-      // const secondPlace = results[results.length-2];
       const firstPlace = results[0];
       const secondPlace = results[1];
       if (firstPlace.votes !== secondPlace.votes) {
@@ -855,7 +853,7 @@ class SubmitElection extends Component {
     const keys = encrypt.generateKeys();
     const electionKey = keys.public_key;
     const resultKey = keys.private_key;
-    const contractOwner = await this.props.electionBuilder.methods.contractOwner().call(); ///////////////might need fix
+    // const contractOwner = await this.props.electionBuilder.methods.contractOwner().call(); ///////////////might need fix
     
     let hashedVoterIds = [];
     for (let i = 0; i < this.props.validVoters.length; i++) {
@@ -865,7 +863,7 @@ class SubmitElection extends Component {
     const validVoterCount = hashedVoterIds.length;
     console.log("abc: " + hashedVoterIds);
     
-    await this.props.electionBuilder.methods.deployElection(this.props.candidates, time, electionKey, resultKey, contractOwner, hashedVoterIds, validVoterCount).send({from: this.props.accounts[0]});
+    await this.props.electionBuilder.methods.deployElection(this.props.candidates, time, electionKey, resultKey, hashedVoterIds, validVoterCount).send({from: this.props.accounts[0]});
   }
 
   render() {
