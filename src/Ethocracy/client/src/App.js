@@ -160,7 +160,12 @@ class Vote extends Component {
     let elections = [];
     let electionCount = await this.props.electionBuilder.methods.electionCount().call();
     for (let i = 0; i < electionCount; i++) {
-      let election = await this.props.electionBuilder.methods.elections(i).call();
+      let electionAddress = await this.props.electionBuilder.methods.elections(i).call();
+      let electionName = await this.props.electionBuilder.methods.electionNames(electionAddress).call();
+      let electionDeadline = await this.props.electionBuilder.methods.electionDeadlines(electionAddress).call();
+      let electionType = await this.props.electionBuilder.methods.electionTypes(electionAddress).call();
+      // let election = await this.props.electionBuilder.methods.elections(i).call();
+      let election = {name: electionName, address: electionAddress, type: electionType, deadline: electionDeadline};
       elections.push(election);
     }
     this.setState(() => {
@@ -189,7 +194,6 @@ class Vote extends Component {
   render() {
     return (
       <div>
-        <p>Vote</p>
         {
           this.state.selectedElection ? 
           <SelectCandidate
@@ -221,33 +225,36 @@ class Vote extends Component {
   }
 }
 
-// class ElectionInfo extends Component {
-//   constructor(props) {
-//     super(props);
-//   }
-//   render() {
-//     return (
-//       <div>
-        
-//       </div>
-//     )
-//   }
-// }
-
 class ElectionAddressList extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    return (
-      <div>
-        <p>Elections:</p>
-        {
-          this.props.elections.map((election) => <ElectionAddress key={election} electionValue={election}/>)
-        }
-      </div>
-    )
+    if (this.props.elections.length == 0) {
+      return (
+        ""
+      )
+    } else {
+      return (
+        <div>
+          <p>Elections:</p>
+          <ReactBootStrap.Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Type</th>
+                <th>Deadline</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.props.elections.map((election, index) => <ElectionAddress key={index} name={election.name} address={election.address} type={election.type} deadline={election.deadline}/>)}
+            </tbody>
+          </ReactBootStrap.Table>
+        </div>
+      )
+    }
   }
 }
 
@@ -257,9 +264,12 @@ class ElectionAddress extends Component {
   }
   render() {
     return (
-      <div>
-        {this.props.electionValue}
-      </div>
+      <tr>
+        <td>{this.props.name}</td>
+        <td>{this.props.address}</td>
+        <td>{this.props.type}</td>
+        <td>{this.props.deadline}</td>
+      </tr>
     )
   }
 }
@@ -308,6 +318,40 @@ class SelectElection extends Component {
           <input type="text" name="selectElection"/>
           <button>Select Election</button>
         </form>
+      </div>
+    )
+  }
+}
+
+class ElectionInfo extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      electionName: "",
+      electionDeadline: "",
+      electionType: ""
+    }
+  }
+
+  componentDidMount = async () => {
+    const electionName = await this.props.contract.methods.electionName().call();
+    const electionDeadline = await this.props.contract.methods.electionDeadline().call();
+    const electionType = await this.props.contract.methods.electionType().call();
+    this.setState(() => {
+      return {
+        electionName: electionName,
+        electionDeadline: electionDeadline,
+        electionType: electionType
+      }
+    })
+  }
+  
+  render() {
+    return (
+      <div>
+        <h3>{this.state.electionName}</h3>
+        <br/>
+        Open until: {this.state.electionDeadline}
       </div>
     )
   }
@@ -370,6 +414,7 @@ class SelectCandidate extends Component {
   render() {
     return (
       <div>
+        <ElectionInfo contract={this.props.contract}/>
         <form onSubmit={this.handleInputVoterId}>
         <input type="text" name="inputVoterId"/>
         <button disabled={this.state.voterId !== ""}>Input Voter ID</button>
@@ -556,39 +601,10 @@ class ResultEntry extends Component {
   }
 }
 
-// class ElectionAddressList extends Component {
-//   constructor(props) {
-//     super(props);
-//   }
-
-//   render() {
-//     return (
-//       <div>
-//         <p>Elections:</p>
-//         {
-//           this.props.elections.map((election) => <ElectionAddress key={election} electionValue={election}/>)
-//         }
-//       </div>
-//     )
-//   }
-// }
-
-// class ElectionAddress extends Component {
-//   constructor(props) {
-//     super(props);
-//   }
-//   render() {
-//     return (
-//       <div>
-//         {this.props.electionValue}
-//       </div>
-//     )
-//   }
-// }
-
 class DeployElection extends Component {
   constructor(props) {
     super(props);
+    this.setName = this.setName.bind(this);
     this.setCandidates = this.setCandidates.bind(this);
     this.setType = this.setType.bind(this);
     this.setSelectedTime = this.setSelectedTime.bind(this);
@@ -611,7 +627,6 @@ class DeployElection extends Component {
   }
 
   setType(type) {
-    console.log(Math.floor(this.state.selectedTime.getTime()/1000));
     this.setState(() => {
       return {
         electionType: type
@@ -669,6 +684,10 @@ class DeployElection extends Component {
           setCandidates={this.setCandidates}
           candidates={this.state.candidates}
         />
+        <ElectionName
+          setName={this.setName}
+          name={this.state.name}
+        />
         <ElectionType
           setType={this.setType}
         />
@@ -689,6 +708,8 @@ class DeployElection extends Component {
           web3={this.props.web3}
           selectedTime={this.state.selectedTime}
           validVoters={this.state.validVoters}
+          name={this.state.name}
+          electionType={this.state.electionType}
         />
         
       </div>
@@ -696,24 +717,37 @@ class DeployElection extends Component {
   }
 }
 
-// class ElectionName extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.handleSubmitName = this.handleSubmitName.bind(this);
-//   }
+class ElectionName extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmitName = this.handleSubmitName.bind(this);
+  }
 
-//   handleSubmit(e) {
-//     this.props.setName(this.)
-//   }
-//   render() {
-//     return (
-//       <div>
-//         <p>Election Name</p>
-        
-//       </div>
-//     )
-//   }
-// }
+  handleSubmitName(e) {
+    e.preventDefault();
+    const name = e.target.elements.setName.value.trim();
+    this.props.setName(name);
+  }
+  render() {
+    if (this.props.name === "") {
+      return (
+        <div>
+          <p>Election Name</p>
+          <form onSubmit={this.handleSubmitName}>
+            <input type="text" name="setName"/>
+            <button>Set Name</button>
+          </form>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          Election name: {this.props.name}
+        </div>
+      )
+    }
+  }
+}
 
 class CandidateList extends Component {
   constructor(props) {
@@ -784,10 +818,10 @@ class AddCandidate extends Component {
 class ElectionType extends Component {
   constructor(props){
     super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmitType = this.handleSubmitType.bind(this);
   }
 
-  handleSubmit(e) {
+  handleSubmitType(e) {
     e.preventDefault();
     this.props.setType(this.electionType.value);
   }
@@ -796,12 +830,11 @@ class ElectionType extends Component {
     return (
       <div>
         <p>Election Settings</p>
-        <form onSubmit={this.handleSubmit}>
+        <form onChange={this.handleSubmitType}>
             <select ref={(input) => this.electionType = input} className='selectElectionType'>
               <option>{'FPP'}</option>
               <option>{'STV'}</option>
             </select>
-          <button>Select Type</button>
         </form>
       </div>
     )
@@ -841,19 +874,27 @@ class SubmitElection extends Component {
     this.handleDeployElection = this.handleDeployElection.bind(this);
   }
 
+
+
   async handleDeployElection() {
     const selectedTimestamp = Math.ceil(this.props.selectedTime.getTime() / 1000);
-    // console.log(selectedTimestamp);
     const currentTimestamp = Math.floor(Date.now() / 1000);
-    // console.log(currentTimestamp);
     const time = selectedTimestamp - currentTimestamp;
-    // console.log(time);
+    const date = new Date(selectedTimestamp * 1000);
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul;", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = months[date.getMonth()];
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let day = date.getDate();
+    if (hours < 10) hours = "0" + hours;
+    if (minutes < 10) minutes = "0" + minutes;
+    if (day < 10) day = "0" + day;
+    const timeStrFormat = hours + ":" + minutes + "/" + day + "/" + month + "/" + date.getFullYear();
 
     const encrypt = require("./encrypt");
     const keys = encrypt.generateKeys();
     const electionKey = keys.public_key;
     const resultKey = keys.private_key;
-    // const contractOwner = await this.props.electionBuilder.methods.contractOwner().call(); ///////////////might need fix
     
     let hashedVoterIds = [];
     for (let i = 0; i < this.props.validVoters.length; i++) {
@@ -861,16 +902,14 @@ class SubmitElection extends Component {
       hashedVoterIds.push(hash);
     }
     const validVoterCount = hashedVoterIds.length;
-    console.log("abc: " + hashedVoterIds);
     
-    await this.props.electionBuilder.methods.deployElection(this.props.candidates, time, electionKey, resultKey, hashedVoterIds, validVoterCount).send({from: this.props.accounts[0]});
+    await this.props.electionBuilder.methods.deployElection(this.props.name, this.props.candidates, time, timeStrFormat, this.props.electionType, electionKey, resultKey, hashedVoterIds, validVoterCount).send({from: this.props.accounts[0]});
   }
 
   render() {
     return (
       <div>
-        <p>Deploy</p>
-        <button onClick={this.handleDeployElection}>Deploy Election</button>
+        <button onClick={this.handleDeployElection} disabled={this.props.candidates.length < 2 || this.props.name === ""}>Deploy Election</button>
       </div>
     )
   }

@@ -13,6 +13,10 @@ contract Election {
   mapping(uint => Party) public parties;
   mapping(bytes => bool) public spentVoterIds;
 
+  string public electionName;
+  string public electionDeadline;
+  string public electionType;
+
   string[] public ballots;
   uint public partyCount = 0;
   uint public ballotCount = 0;
@@ -28,8 +32,11 @@ contract Election {
   bytes32[] public hashedVoterIds;
   uint validVoterCount;
 
-  constructor(string[] memory partyNames, uint _time, string memory _electionKey, string memory _resultKey, bytes32[] memory _hashedVoterIds, uint _validVoterCount) public {
+  constructor(string memory _electionName, string[] memory partyNames, uint _time, string memory timeStr, string memory _electionType, string memory _electionKey, string memory _resultKey, bytes32[] memory _hashedVoterIds, uint _validVoterCount) public {
+    electionName = _electionName;
     allowedTime = _time;
+    electionDeadline = timeStr;
+    electionType = _electionType;
     electionKey = _electionKey;
     resultKey = _resultKey;
     hashedVoterIds = _hashedVoterIds;
