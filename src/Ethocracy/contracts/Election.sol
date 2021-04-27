@@ -27,18 +27,17 @@ contract Election {
   uint public winnerVoteCount = 0;
 
   string public electionKey;
-  string public resultKey;
+  string public resultKey = "";
 
   bytes32[] public hashedVoterIds;
   uint validVoterCount;
 
-  constructor(string memory _electionName, string[] memory partyNames, uint _time, string memory timeStr, string memory _electionType, string memory _electionKey, string memory _resultKey, bytes32[] memory _hashedVoterIds, uint _validVoterCount) public {
+  constructor(string memory _electionName, string[] memory partyNames, uint _time, string memory timeStr, string memory _electionType, string memory _electionKey, bytes32[] memory _hashedVoterIds, uint _validVoterCount) public {
     electionName = _electionName;
     allowedTime = _time;
     electionDeadline = timeStr;
     electionType = _electionType;
     electionKey = _electionKey;
-    resultKey = _resultKey;
     hashedVoterIds = _hashedVoterIds;
     validVoterCount = _validVoterCount;
     for (uint i = 0; i < partyNames.length; i++) {

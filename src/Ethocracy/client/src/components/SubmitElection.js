@@ -4,9 +4,10 @@ class SubmitElection extends Component {
     constructor(props){
       super(props);
       this.handleDeployElection = this.handleDeployElection.bind(this);
+      this.state = {
+        electionKey: ""
+      }
     }
-  
-  
   
     async handleDeployElection() {
       const selectedTimestamp = Math.ceil(this.props.selectedTime.getTime() / 1000);
@@ -24,9 +25,18 @@ class SubmitElection extends Component {
       const timeStrFormat = hours + ":" + minutes + "/" + day + "/" + month + "/" + date.getFullYear();
   
       const encrypt = require("../encrypt");
-      const keys = encrypt.generateKeys();
-      const electionKey = keys.public_key;
-      const resultKey = keys.private_key;
+      // const keys = encrypt.generateKeys();
+      // const electionKey = keys.public_key;
+      // const resultKey = keys.private_key;
+      // const resultKey = "abcde";
+
+      await fetch(`/api/generateKeys?name=${encodeURIComponent(this.props.name)}&deadline=${selectedTimestamp}`)
+        .then(response => response.json())
+        .then(data => this.setState(() => {
+          return {
+            electionKey: data.public_key
+          }
+        }));
       
       let hashedVoterIds = [];
       for (let i = 0; i < this.props.validVoters.length; i++) {
@@ -35,7 +45,7 @@ class SubmitElection extends Component {
       }
       const validVoterCount = hashedVoterIds.length;
       
-      await this.props.electionBuilder.methods.deployElection(this.props.name, this.props.candidates, time, timeStrFormat, this.props.electionType, electionKey, resultKey, hashedVoterIds, validVoterCount).send({from: this.props.accounts[0]});
+      await this.props.electionBuilder.methods.deployElection(this.props.name, this.props.candidates, time, timeStrFormat, this.props.electionType, this.state.electionKey, hashedVoterIds, validVoterCount).send({from: this.props.accounts[0]});
     }
   
     render() {

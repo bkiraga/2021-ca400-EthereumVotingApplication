@@ -35,12 +35,12 @@ class ElectionResults extends Component {
           ballots: ballots
         }
       })
-      const resultKey = await this.props.contract.methods.resultKey().call();
-      this.setState(() => {
-        return {
-          resultKey: resultKey
-        }
-      })
+      // const resultKey = await this.props.contract.methods.resultKey().call();
+      // this.setState(() => {
+      //   return {
+      //     resultKey: resultKey
+      //   }
+      // })
     }
   
     async getCandidates() {
@@ -56,10 +56,57 @@ class ElectionResults extends Component {
         }
       })
     }
+
+    // async getResultKey() {
+    //   let resultKey = await this.props.contract.methods.resultKey().call();
+    //   console.log(resultKey);
+    //   if (resultKey === "") {
+    //     const electionName = await this.props.contract.methods.electionName().call();
+    //     await fetch(`/api/generateKeys?name=${encodeURIComponent(electionName)}`)
+    //     .then(response => response.json())
+    //     .then(data => this.setState(() => {
+    //       return {
+    //         resultKey: data.resultKey
+    //       }
+    //     }));
+    //     // console.log(this.state.resultKey);
+    //     if (this.state.resultKey !== "voting still ongoing") {
+    //       await this.props.contract.methods.releaseResultKey(this.state.resultKey).send({from: this.props.accounts[0]})
+    //     } else {
+
+    //     }
+    //   }
+    // }
+
+    async getResultKey() {
+      let resultKey;
+      try {
+        resultKey = await this.props.contract.methods.resultKey().call();
+      } catch (e) {
+        const electionName = await this.props.contract.methods.electionName().call();
+        await fetch(`/api/generateKeys?name=${encodeURIComponent(electionName)}`)
+        .then(response => response.json())
+        .then(data => this.setState(() => {
+          return {
+            resultKey: data.resultKey
+          }
+        }));
+      }
+      console.log(this.state.resultKey);
+      if (this.state.resultKey !== "voting still ongoing") {
+        await this.props.contract.methods.releaseResultKey(this.state.resultKey).send({from: this.props.accounts[0]})
+      } else {
+
+        }
+      }
   
     async handleElectionResults() {
       let unmaskedBallots = [];
       await this.getBallots();
+      await this.getResultKey();
+      if (this.state.resultKey === "" || this.state.resultKey === "voting still ongoing") {
+        return "voting still ongoing";
+      }
       const encrypt = require("../encrypt");
       for (let i = 0; i < this.state.ballotCount; i++){
         let unmaskedBallot = encrypt.unmaskBallot(this.state.ballots[i], this.state.resultKey);
