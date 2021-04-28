@@ -2,20 +2,50 @@ import React, { Component } from "react";
 import ResultsTable from "./ResultsTable"
 
 class ElectionResults extends Component {
+    mounted = false;
     constructor(props) {
       super(props);
       this.getBallots = this.getBallots.bind(this);
       this.getCandidates = this.getCandidates.bind(this);
+      this.getResultKey = this.getResultKey.bind(this);
+      this.handleUnlockResults = this.handleUnlockResults.bind(this);
       this.handleElectionResults = this.handleElectionResults.bind(this);
       this.state = {
+        electionName: "",
+        electionStatus: "",
         ballotCount: 0,
         ballots: [],
-        resultKey: "",
+        resultKey: "noKey",
         unmaskedBallotList: [],
         candidates: [],
         results: [],
         winner: undefined
       }
+    }
+
+    componentDidMount = async () => {
+      this.mounted = true;
+      const electionName = await this.props.contract.methods.electionName().call();
+      this.setState(() => {
+        return {
+          electionName: electionName
+        }
+      })
+    }
+
+    componentDidUpdate = async () => {
+      if (this.mounted === true) {
+        const electionStatus = await this.props.contract.methods.electionStatus().call();
+        this.setState(() => {
+          return {
+            electionStatus: electionStatus
+          }
+        })
+      }
+    }
+
+    componentWillUnmount() {
+      this.mounted = false;
     }
   
     async getBallots() {
@@ -35,12 +65,6 @@ class ElectionResults extends Component {
           ballots: ballots
         }
       })
-      // const resultKey = await this.props.contract.methods.resultKey().call();
-      // this.setState(() => {
-      //   return {
-      //     resultKey: resultKey
-      //   }
-      // })
     }
   
     async getCandidates() {
@@ -59,51 +83,46 @@ class ElectionResults extends Component {
 
     // async getResultKey() {
     //   let resultKey = await this.props.contract.methods.resultKey().call();
-    //   console.log(resultKey);
-    //   if (resultKey === "") {
-    //     const electionName = await this.props.contract.methods.electionName().call();
-    //     await fetch(`/api/generateKeys?name=${encodeURIComponent(electionName)}`)
-    //     .then(response => response.json())
-    //     .then(data => this.setState(() => {
-    //       return {
-    //         resultKey: data.resultKey
-    //       }
-    //     }));
+    //   // console.log(resultKey);
+    //   // if (resultKey === "") {
+    //     // const electionName = await this.props.contract.methods.electionName().call();
+    //     // console.log(electionName);
+    //     // await fetch(`/api/generateKeys?name=${encodeURIComponent(electionName)}`)
+    //     // .then(response => response.json())
+    //     // .then(data => this.setState(() => {
+    //     //   return {
+    //     //     resultKey: data.resultKey
+    //     //   }
+    //     // }));
     //     // console.log(this.state.resultKey);
-    //     if (this.state.resultKey !== "voting still ongoing") {
-    //       await this.props.contract.methods.releaseResultKey(this.state.resultKey).send({from: this.props.accounts[0]})
-    //     } else {
+    //     // if (this.state.resultKey !== "voting still ongoing") {
+    //     //   await this.props.contract.methods.releaseResultKey(this.state.resultKey).send({from: this.props.accounts[0]})
+    //     // } else {
 
-    //     }
-    //   }
+    //     // }
+    //   // }
     // }
 
     async getResultKey() {
-      let resultKey;
-      try {
-        resultKey = await this.props.contract.methods.resultKey().call();
-      } catch (e) {
-        const electionName = await this.props.contract.methods.electionName().call();
-        await fetch(`/api/generateKeys?name=${encodeURIComponent(electionName)}`)
-        .then(response => response.json())
-        .then(data => this.setState(() => {
-          return {
-            resultKey: data.resultKey
-          }
-        }));
-      }
-      console.log(this.state.resultKey);
-      if (this.state.resultKey !== "voting still ongoing") {
-        await this.props.contract.methods.releaseResultKey(this.state.resultKey).send({from: this.props.accounts[0]})
-      } else {
-
+      await fetch(`/api/getResultKey?name=${encodeURIComponent(this.state.electionName)}`)
+      .then(response => response.json())
+      .then(data => this.setState(() => {
+        return {
+          resultKey: data.resultKey
         }
-      }
+      }));
+    }
+
+    async handleUnlockResults() {
+      await this.getResultKey();
+      await this.props.contract.methods.releaseResultKey(this.state.resultKey).send({from: this.props.accounts[0]});
+    }
   
     async handleElectionResults() {
       let unmaskedBallots = [];
       await this.getBallots();
-      await this.getResultKey();
+      console.log(this.state.resultKey);
+      console.log(this.state.electionStatus);
       if (this.state.resultKey === "" || this.state.resultKey === "voting still ongoing") {
         return "voting still ongoing";
       }
@@ -165,18 +184,26 @@ class ElectionResults extends Component {
         }
       })
       console.log(this.state.winner);
-  
-  
     }
   
     render() {
-      return (
-        <div>
-          <p>Election Results</p>
-          <button onClick={this.handleElectionResults}>Get Result</button>
-          {this.state.results.length !== 0 ? <ResultsTable winner={this.state.winner} results={this.state.results}/> : " "}
-        </div>
-      )
+      if (this.state.electionStatus === "inProgress") {
+        return (
+          <div>
+            <h3>Election Status: Voting in progress</h3>
+            <p>Waiting for election creator to release the results</p>
+            <button onClick={this.handleUnlockResults}>Unlock results</button>
+          </div>
+        )
+      } else {
+          return (
+            <div>
+              <p>Election Results</p>
+              <button onClick={this.handleElectionResults}>Get Result</button>
+              {this.state.results.length !== 0 ? <ResultsTable winner={this.state.winner} results={this.state.results}/> : " "}
+            </div>
+          )
+      }
     }
   }
 

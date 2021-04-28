@@ -30,16 +30,20 @@ app.get('/api/getResultKey', (req, res) => {
     const electionData = elections.lookupElection(electionName);
     // const resultKey = electionData.key;
     const deadline = electionData.deadline;
-    const electionFinished = checkElectionComplete(deadline);   //result key is only made available after the election deadline
-    if (electionFinished == true) {
-        return res.send({
-            resultKey: electionData.key
-        });
-    } else {
-        res.send({
-            resultKey: "voting still ongoing"
-        })
-    }
+    // const electionFinished = checkElectionComplete(deadline);   //result key is only made available after the election deadline
+    // if (electionFinished == true) {
+    //     return res.send({
+    //         resultKey: electionData.key
+    //     });
+    // } else {
+    //     res.send({
+    //         resultKey: "voting still ongoing"
+    //     })
+    // }
+    console.log(electionData.key);
+    res.send({
+        resultKey: electionData.key
+    });
 })
 
 app.listen(3001, () =>

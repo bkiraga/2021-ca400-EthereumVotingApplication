@@ -16,6 +16,7 @@ contract Election {
   string public electionName;
   string public electionDeadline;
   string public electionType;
+  string public electionStatus;
 
   string[] public ballots;
   uint public partyCount = 0;
@@ -27,7 +28,7 @@ contract Election {
   uint public winnerVoteCount = 0;
 
   string public electionKey;
-  string public resultKey = "";
+  string public resultKey = "noKey";
 
   bytes32[] public hashedVoterIds;
   uint validVoterCount;
@@ -40,6 +41,7 @@ contract Election {
     electionKey = _electionKey;
     hashedVoterIds = _hashedVoterIds;
     validVoterCount = _validVoterCount;
+    electionStatus = "inProgress";
     for (uint i = 0; i < partyNames.length; i++) {
         addParty(partyNames[i]);
     }
@@ -50,7 +52,9 @@ contract Election {
   }
 
   function releaseResultKey (string memory _resultKey) public {
+      //require that its the cretor calling this function
       resultKey = _resultKey;
+      electionStatus = "complete";
   }
 
   function addParty (string memory _name) private {
