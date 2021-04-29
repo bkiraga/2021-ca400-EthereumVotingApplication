@@ -6,10 +6,16 @@ class ElectionName extends Component {
       this.handleSubmitName = this.handleSubmitName.bind(this);
     }
   
-    handleSubmitName(e) {
+    async handleSubmitName(e) {
       e.preventDefault();
       const name = e.target.elements.setName.value.trim();
-      this.props.setName(name);
+      const checkDuplicates = await this.props.electionBuilder.methods.checkDuplicateNames(name).call();
+      console.log(checkDuplicates);
+      if (checkDuplicates) {
+        this.props.setName(name);
+      } else {
+        alert("election name taken");
+      }
     }
     render() {
       if (this.props.name === "") {

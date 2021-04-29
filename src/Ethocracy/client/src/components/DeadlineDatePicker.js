@@ -21,7 +21,7 @@ class DeadlineDatePicker extends Component {
           selected={this.props.selectedTime}
           onChange={date => this.props.setSelectedTime(date)}
           minDate={date}
-          minTime={new Date(date.setHours(currentHour, currentMinutes, 0, 0))}
+          minTime={new Date(date.setHours(currentHour, currentMinutes + 1, 0, 0))}
           maxTime={new Date(date.setHours(23, 59, 0, 0))}
           timeIntervals={1}
           dateFormat="dd/MM/yyyy h:mm aa"

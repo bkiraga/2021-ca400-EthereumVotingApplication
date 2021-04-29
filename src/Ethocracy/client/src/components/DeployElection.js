@@ -44,11 +44,13 @@ class DeployElection extends Component {
 
   setCandidates(candidate, setting) {
     if (setting === 'add') {
-      this.setState((prevState) => {
-        return {
-          candidates: prevState.candidates.concat(candidate)
-        }
-      })
+      if (!this.state.candidates.includes(candidate)){
+        this.setState((prevState) => {
+          return {
+            candidates: prevState.candidates.concat(candidate)
+          }
+        })
+      }
     } else if (setting === 'rm') {
       this.setState((prevState) => {
         prevState.candidates.pop();
@@ -95,6 +97,7 @@ class DeployElection extends Component {
         <ElectionName
           setName={this.setName}
           name={this.state.name}
+          electionBuilder={this.props.electionBuilder}
         />
         <ElectionType
           setType={this.setType}

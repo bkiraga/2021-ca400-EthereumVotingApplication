@@ -9,6 +9,7 @@ contract Election {
       uint votes;
   }
 
+  //solidity provides getter and setter functions for all mappings/varriables
   mapping(address => bool) public voters;
   mapping(uint => Party) public parties;
   mapping(bytes => bool) public spentVoterIds;
@@ -52,7 +53,7 @@ contract Election {
   }
 
   function releaseResultKey (string memory _resultKey) public {
-      //require that its the cretor calling this function
+    //   require(block.timestamp - startTime > allowedTime);
       resultKey = _resultKey;
       electionStatus = "complete";
   }
@@ -73,8 +74,8 @@ contract Election {
   }
 
   function castVote (string memory _vote, bytes memory _voterId) public {
-      // require(block.timestamp - startTime < allowedTime);
-      // require(!voters[msg.sender]);
+      require(block.timestamp - startTime < allowedTime);
+      require(!voters[msg.sender]);
       require(!spentVoterIds[_voterId]);
       require(validateUser(_voterId) == true);
       ballots.push(_vote);
