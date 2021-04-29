@@ -103,6 +103,7 @@ class ElectionResults extends Component {
     //   // }
     // }
 
+
     async getResultKey() {
       await fetch(`/api/getResultKey?name=${encodeURIComponent(this.state.electionName)}`)
       .then(response => response.json())
@@ -115,14 +116,23 @@ class ElectionResults extends Component {
 
     async handleUnlockResults() {
       await this.getResultKey();
-      await this.props.contract.methods.releaseResultKey(this.state.resultKey).send({from: this.props.accounts[0]});
+      const electionKey = await this.props.contract.methods.electionKey().call();
+      const encrypt = require("../encrypt");
+      const testCiphertext = encrypt.maskBallot("teststring", electionKey);
+      try {
+        if (encrypt.unmaskBallot(testCiphertext, this.state.resultKey) === "teststring") {
+          await this.props.contract.methods.releaseResultKey(this.state.resultKey).send({from: this.props.accounts[0]});
+        } else {
+          console.log("Not a valid key");
+        }
+      } catch (e) {
+        alert("Election still ongoing");
+      }
     }
   
     async handleElectionResults() {
       let unmaskedBallots = [];
       await this.getBallots();
-      console.log(this.state.resultKey);
-      console.log(this.state.electionStatus);
       if (this.state.resultKey === "" || this.state.resultKey === "voting still ongoing") {
         return "voting still ongoing";
       }
