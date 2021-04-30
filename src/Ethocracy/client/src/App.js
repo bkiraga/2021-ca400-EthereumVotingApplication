@@ -10,7 +10,9 @@ import "./App.css";
 import "react-datepicker/dist/react-datepicker.css";
 import Home from "./components/Home";
 import Create from "./components/Create";
+import Vote from "./components/Vote";
 import VoteInterface from "./components/VoteInterface";
+import DeployElection from "./components/DeployElection";
 import NavigationBar from "./components/NavigationBar";
 import * as ReactBootStrap from "react-bootstrap";
 
@@ -49,9 +51,9 @@ class App extends Component {
       <div className="App">
         <NavigationBar />
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/create" component={Create} />
-          <Route exact path="/vote" component={VoteInterface} />
+        <Route exact path="/" component={Home} />
+        <Route exact path="/create" component={() => (<DeployElection electionBuilder={this.electionBuilder} accounts={this.accounts} web3={this.web3}/>)} />
+        <Route exact path="/vote" component={() => (<Vote electionBuilder={this.electionBuilder} accounts={this.accounts} candidates={this.candidates} web3={this.web3}/>)} />
         </Switch>
       </div>
     ); 

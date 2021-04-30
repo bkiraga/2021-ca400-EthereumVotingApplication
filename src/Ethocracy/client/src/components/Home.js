@@ -24,7 +24,7 @@ const Home = (props) => (
         <Card.Text>
           Vote in an active election or view the results of a past election.
         </Card.Text>
-        <Button variant="success"><Link style={{ color: 'inherit', textDecoration: 'inherit'}} to="/vote">Browse Elections</Link></Button>
+        <Button to="/vote" variant="success"><Link style={{ color: 'inherit', textDecoration: 'inherit'}} to="/vote">Browse Elections</Link></Button>
       </Card.Body>
     </Card>
       </Col>
