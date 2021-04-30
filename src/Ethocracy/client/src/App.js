@@ -3,11 +3,15 @@ import NavBar from './components/NavBar';
 import DatePicker from "react-datepicker";
 import {setMinutes, setHours} from "date-fns";
 import ElectionBuilderContract from "./contracts/ElectionBuilder.json";
+import { Router, Route, Switch } from "react-router-dom";
 import ElectionContract from "./contracts/Election.json";
 import getWeb3 from "./getWeb3";
-
 import "./App.css";
 import "react-datepicker/dist/react-datepicker.css";
+import Home from "./components/Home";
+import Create from "./components/Create";
+import VoteInterface from "./components/VoteInterface";
+import NavigationBar from "./components/NavigationBar";
 import * as ReactBootStrap from "react-bootstrap";
 
 class App extends Component {
@@ -43,15 +47,14 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <h1>Ethocracy</h1>
-        <NavBar 
-          // voting={this.voting}
-          accounts = {this.accounts}
-          electionBuilder={this.electionBuilder}
-          web3 = {this.web3}
-        />
+        <NavigationBar />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/create" component={Create} />
+          <Route exact path="/vote" component={VoteInterface} />
+        </Switch>
       </div>
-    );
+    ); 
   }
 }
 
