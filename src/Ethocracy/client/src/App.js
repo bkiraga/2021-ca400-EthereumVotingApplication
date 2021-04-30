@@ -1,14 +1,17 @@
 import React, { Component } from "react";
-import NavBar from './components/NavBar';
-import DatePicker from "react-datepicker";
-import {setMinutes, setHours} from "date-fns";
+import NavigationBar from './components/NavigationBar';
 import ElectionBuilderContract from "./contracts/ElectionBuilder.json";
 import ElectionContract from "./contracts/Election.json";
-import getWeb3 from "./getWeb3";
+import { Router, Route, Switch } from "react-router-dom";
+import getWeb3 from "./getWeb3";  
 
 import "./App.css";
 import "react-datepicker/dist/react-datepicker.css";
 import * as ReactBootStrap from "react-bootstrap";
+
+import AboutUs from "./components/AboutUs";
+import Vote from "./components/Vote";
+import DeployElection from "./components/DeployElection";
 
 class App extends Component {
   state = {
@@ -44,16 +47,19 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Ethocracy</h1>
-        <NavBar 
-          // voting={this.voting}
-          accounts = {this.accounts}
-          electionBuilder={this.electionBuilder}
-          web3 = {this.web3}
-        />
+        <NavigationBar />
+        <Switch>
+          <Route exact path="/" component={AboutUs} />
+          <Route exact path="/create" component={() => (<DeployElection electionBuilder={this.electionBuilder} accounts={this.accounts} web3={this.web3}/>)} />
+          <Route exact path="/vote" component={() => (<Vote electionBuilder={this.electionBuilder} accounts={this.accounts} candidates={this.candidates} web3={this.web3}/>)} />
+        </Switch>
       </div>
     );
   }
 }
+
+// {this.state.voteVisibility ? <Vote electionBuilder={this.props.electionBuilder} accounts={this.props.accounts} candidates={this.state.candidates} web3={this.props.web3}/>: " "}
+// {this.state.deployElectionVisibility ? <DeployElection electionBuilder={this.props.electionBuilder} accounts={this.props.accounts} web3={this.props.web3}/>: " "}
 
 // class NavBar extends Component {
 //   constructor(props) {
