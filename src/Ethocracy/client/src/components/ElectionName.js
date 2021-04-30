@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Button, Form, InputGroup } from "react-bootstrap";
 
 class ElectionName extends Component {
     constructor(props) {
@@ -21,18 +22,28 @@ class ElectionName extends Component {
       if (this.props.name === "") {
         return (
           <div>
-            <p>Election Name</p>
-            <form onSubmit={this.handleSubmitName}>
-              <input type="text" name="setName"/>
-              <button>Set Name</button>
-            </form>
+            <Form onSubmit={this.handleSubmitName}>
+            <InputGroup>
+              <Form.Control type="input" name="setName" placeholder="Election Name"/>
+              <InputGroup.Append>
+                <Button type="submit" variant="outline-secondary">Set Name</Button>
+              </InputGroup.Append> 
+              </InputGroup>
+            </Form>
           </div>
         )
       } else {
         return (
           <div>
-            Election name: {this.props.name}
-          </div>
+          <Form onSubmit={this.handleSubmitName}>
+          <InputGroup>
+            <Form.Control disabled type="input" name="setName" placeholder="Election Name"/>
+            <InputGroup.Append>
+              <Button disabled variant="outline-secondary">Set Name</Button>
+            </InputGroup.Append> 
+            </InputGroup>
+          </Form>
+        </div>
         )
       }
     }
