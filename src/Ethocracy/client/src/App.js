@@ -57,20 +57,11 @@ class App extends Component {
     }
     return (
       <div className="App">
-<<<<<<< HEAD
-        <h1>Ethocracy</h1>
-        <NavigationBar />
-        <Switch>
-          <Route exact path="/" component={AboutUs} />
-          <Route exact path="/create" component={() => (<DeployElection electionBuilder={this.electionBuilder} accounts={this.accounts} web3={this.web3}/>)} />
-          <Route exact path="/vote" component={() => (<Vote electionBuilder={this.electionBuilder} accounts={this.accounts} candidates={this.candidates} web3={this.web3}/>)} />
-=======
         <NavigationBar />
         <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/create" component={() => (<DeployElection electionBuilder={this.electionBuilder} accounts={this.accounts} web3={this.web3}/>)} />
         <Route exact path="/vote" component={() => (<Vote electionBuilder={this.electionBuilder} accounts={this.accounts} candidates={this.candidates} web3={this.web3}/>)} />
->>>>>>> develop
         </Switch>
       </div>
     ); 
