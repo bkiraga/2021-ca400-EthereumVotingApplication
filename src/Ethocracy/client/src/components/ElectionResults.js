@@ -81,29 +81,6 @@ class ElectionResults extends Component {
       })
     }
 
-    // async getResultKey() {
-    //   let resultKey = await this.props.contract.methods.resultKey().call();
-    //   // console.log(resultKey);
-    //   // if (resultKey === "") {
-    //     // const electionName = await this.props.contract.methods.electionName().call();
-    //     // console.log(electionName);
-    //     // await fetch(`/api/generateKeys?name=${encodeURIComponent(electionName)}`)
-    //     // .then(response => response.json())
-    //     // .then(data => this.setState(() => {
-    //     //   return {
-    //     //     resultKey: data.resultKey
-    //     //   }
-    //     // }));
-    //     // console.log(this.state.resultKey);
-    //     // if (this.state.resultKey !== "voting still ongoing") {
-    //     //   await this.props.contract.methods.releaseResultKey(this.state.resultKey).send({from: this.props.accounts[0]})
-    //     // } else {
-
-    //     // }
-    //   // }
-    // }
-
-
     async getResultKey() {
       await fetch(`/api/getResultKey?name=${encodeURIComponent(this.state.electionName)}`)
       .then(response => response.json())
@@ -133,12 +110,10 @@ class ElectionResults extends Component {
     async handleElectionResults() {
       let unmaskedBallots = [];
       await this.getBallots();
-      if (this.state.resultKey === "" || this.state.resultKey === "voting still ongoing") {
-        return "voting still ongoing";
-      }
+      const resultKey = await this.props.contract.methods.resultKey().call();
       const encrypt = require("../encrypt");
       for (let i = 0; i < this.state.ballotCount; i++){
-        let unmaskedBallot = encrypt.unmaskBallot(this.state.ballots[i], this.state.resultKey);
+        let unmaskedBallot = encrypt.unmaskBallot(this.state.ballots[i], resultKey);
         unmaskedBallots.push(unmaskedBallot);
       }
       this.setState(() => {
