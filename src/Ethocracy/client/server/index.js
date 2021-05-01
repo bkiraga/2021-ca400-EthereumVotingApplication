@@ -38,12 +38,8 @@ app.get('/api/getResultKey', (req, res) => {
       resultKey: "noKey"
     })
   }
-  // console.log(electionData.key);
-  // res.send({
-    // resultKey: electionData.key
-  // });
 })
 
-app.listen(3001, () =>
+app.listen(3006, () =>
   console.log('Express server is running on localhost:3001')
 );

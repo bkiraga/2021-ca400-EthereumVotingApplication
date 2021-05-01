@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import NavigationBar from './components/NavigationBar';
 import ElectionBuilderContract from "./contracts/ElectionBuilder.json";
 import { Router, Route, Switch } from "react-router-dom";
 import ElectionContract from "./contracts/Election.json";
@@ -15,8 +14,6 @@ import NavigationBar from "./components/NavigationBar";
 import * as ReactBootStrap from "react-bootstrap";
 
 import AboutUs from "./components/AboutUs";
-import Vote from "./components/Vote";
-import DeployElection from "./components/DeployElection";
 
 class App extends Component {
   state = {
