@@ -3,13 +3,7 @@ import NavigationBar from './components/NavigationBar';
 import ElectionBuilderContract from "./contracts/ElectionBuilder.json";
 import { Router, Route, Switch } from "react-router-dom";
 import ElectionContract from "./contracts/Election.json";
-<<<<<<< HEAD
-import { Router, Route, Switch } from "react-router-dom";
-import getWeb3 from "./getWeb3";  
-
-=======
 import getWeb3 from "./getWeb3";
->>>>>>> develop
 import "./App.css";
 import "react-datepicker/dist/react-datepicker.css";
 import Home from "./components/Home";
