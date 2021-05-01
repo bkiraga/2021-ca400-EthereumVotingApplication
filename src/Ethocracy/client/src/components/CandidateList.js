@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { ListGroup } from "react-bootstrap";
 import Candidate from "./Candidate";
 
 class CandidateList extends Component {
@@ -8,10 +9,12 @@ class CandidateList extends Component {
     render() {
       return (
         <div>
-          <p>Candidates</p>
+          <ListGroup>
           {
             this.props.candidates.map((candidate) => <Candidate key={candidate} candidateValue={candidate}/>)
           }
+            
+          </ListGroup>
         </div>
       )
     }

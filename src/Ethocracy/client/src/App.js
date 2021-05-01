@@ -1,12 +1,23 @@
 import React, { Component } from "react";
 import NavigationBar from './components/NavigationBar';
 import ElectionBuilderContract from "./contracts/ElectionBuilder.json";
+import { Router, Route, Switch } from "react-router-dom";
 import ElectionContract from "./contracts/Election.json";
+<<<<<<< HEAD
 import { Router, Route, Switch } from "react-router-dom";
 import getWeb3 from "./getWeb3";  
 
+=======
+import getWeb3 from "./getWeb3";
+>>>>>>> develop
 import "./App.css";
 import "react-datepicker/dist/react-datepicker.css";
+import Home from "./components/Home";
+import Create from "./components/Create";
+import Vote from "./components/Vote";
+import VoteInterface from "./components/VoteInterface";
+import DeployElection from "./components/DeployElection";
+import NavigationBar from "./components/NavigationBar";
 import * as ReactBootStrap from "react-bootstrap";
 
 import AboutUs from "./components/AboutUs";
@@ -46,15 +57,23 @@ class App extends Component {
     }
     return (
       <div className="App">
+<<<<<<< HEAD
         <h1>Ethocracy</h1>
         <NavigationBar />
         <Switch>
           <Route exact path="/" component={AboutUs} />
           <Route exact path="/create" component={() => (<DeployElection electionBuilder={this.electionBuilder} accounts={this.accounts} web3={this.web3}/>)} />
           <Route exact path="/vote" component={() => (<Vote electionBuilder={this.electionBuilder} accounts={this.accounts} candidates={this.candidates} web3={this.web3}/>)} />
+=======
+        <NavigationBar />
+        <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/create" component={() => (<DeployElection electionBuilder={this.electionBuilder} accounts={this.accounts} web3={this.web3}/>)} />
+        <Route exact path="/vote" component={() => (<Vote electionBuilder={this.electionBuilder} accounts={this.accounts} candidates={this.candidates} web3={this.web3}/>)} />
+>>>>>>> develop
         </Switch>
       </div>
-    );
+    ); 
   }
 }
 

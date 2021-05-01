@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Form, InputGroup } from "react-bootstrap";
 
 class ElectionType extends Component {
     constructor(props){
@@ -14,13 +15,17 @@ class ElectionType extends Component {
     render() {
       return (
         <div>
-          <p>Election Settings</p>
-          <form onChange={this.handleSubmitType}>
-              <select ref={(input) => this.electionType = input} className='selectElectionType'>
+          <Form onChange={this.handleSubmitType}>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text>Election Type</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control as="select" ref={(input) => this.electionType = input} className='selectElectionType'>
                 <option>{'FPP'}</option>
                 <option>{'STV'}</option>
-              </select>
-          </form>
+              </Form.Control>
+            </InputGroup>
+          </Form>
         </div>
       )
     }

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Button, ButtonGroup, Form } from "react-bootstrap";
 
 class AddCandidate extends Component {
     constructor(props) {
@@ -26,12 +27,15 @@ class AddCandidate extends Component {
     render() {
       return(
         <div>
-          <form onSubmit={this.handleAddCandidates}>
-            <input type="text" name="addCandidates"/>
-            <button>Add Candidate</button>
-          </form>
-          <button onClick={this.handleRemove}>Remove</button>
-          <button onClick={this.handleRemoveAll}>Remove all</button>
+          <Form onSubmit={this.handleAddCandidates}>
+            <Form.Control type="input" name="addCandidates" placeholder="Candidate Name"/>
+            <br />
+            <ButtonGroup>
+              <Button type="submit" variant="success">Add Candidate</Button>
+              <Button onClick={this.handleRemove} variant="secondary">Remove</Button>
+              <Button onClick={this.handleRemoveAll} variant="danger">Remove all</Button>
+            </ButtonGroup>       
+          </Form>
         </div>
       )
     }

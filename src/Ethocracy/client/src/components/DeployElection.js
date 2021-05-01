@@ -8,6 +8,7 @@ import SubmitElection from "./SubmitElection";
 import DeadlineDatePicker from "./DeadlineDatePicker";
 import DatePicker from "react-datepicker";
 import {setMinutes, setHours} from "date-fns";
+import { Col, Container, FormGroup, Row } from "react-bootstrap";
 
 class DeployElection extends Component {
   constructor(props) {
@@ -86,41 +87,65 @@ class DeployElection extends Component {
   render() {
     console.log(this.state.selectedTime);
     return (
-      <div>
-        <CandidateList
-          candidates={this.state.candidates}
-        />
-        <AddCandidate
-          setCandidates={this.setCandidates}
-          candidates={this.state.candidates}
-        />
-        <ElectionName
+      <Container style={{padding: "5rem"}}>
+        <Row className="justify-content-md-center">
+          <Col sm={2}></Col>
+          <Col sm={6}>
+
+          <FormGroup>
+          <CandidateList
+              candidates={this.state.candidates}
+            />
+          <AddCandidate
+            setCandidates={this.setCandidates}
+            candidates={this.state.candidates}
+            />
+          <br />
+          
+          <ElectionName
           setName={this.setName}
           name={this.state.name}
           electionBuilder={this.props.electionBuilder}
         />
+        <br />
         <ElectionType
           setType={this.setType}
         />
-        <DeadlineDatePicker
+        <br />
+          <DeadlineDatePicker
           selectedTime={this.state.selectedTime}
           setSelectedTime={this.setSelectedTime}
-        />
+           />
+          <br />
+                  
         <ValidVoterSubmit
-          setValidVoters={this.setValidVoters}
-        />
-        <SubmitElection
-          electionBuilder={this.props.electionBuilder}
-          accounts={this.props.accounts}
-          candidates={this.state.candidates}
-          web3={this.props.web3}
-          selectedTime={this.state.selectedTime}
-          validVoters={this.state.validVoters}
-          name={this.state.name}
-          electionType={this.state.electionType}
-        />
-        
-      </div>
+        setValidVoters={this.setValidVoters}
+      />
+      <br />
+
+      <SubmitElection
+        electionBuilder={this.props.electionBuilder}
+        accounts={this.props.accounts}
+        candidates={this.state.candidates}
+        web3={this.props.web3}
+        selectedTime={this.state.selectedTime}
+        validVoters={this.state.validVoters}
+        name={this.state.name}
+        electionType={this.state.electionType}
+      />
+
+          </FormGroup>
+ 
+          </Col>
+          <Col sm={2}></Col> 
+        </Row>
+        <Row className="justify-content-md-center">
+          <Col>
+          </Col>
+          <Col>
+          </Col>
+        </Row>        
+      </Container>
     )
   }
 }
