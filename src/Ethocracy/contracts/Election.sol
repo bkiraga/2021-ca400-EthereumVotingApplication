@@ -34,7 +34,9 @@ contract Election {
   bytes32[] public hashedVoterIds;
   uint validVoterCount;
 
-  constructor(string memory _electionName, string[] memory partyNames, uint _time, string memory timeStr, string memory _electionType, string memory _electionKey, bytes32[] memory _hashedVoterIds, uint _validVoterCount) public {
+  uint public stvSeatCount;
+
+  constructor(string memory _electionName, string[] memory partyNames, uint _time, string memory timeStr, string memory _electionType, uint _stvSeatCount, string memory _electionKey, bytes32[] memory _hashedVoterIds, uint _validVoterCount) public {
     electionName = _electionName;
     allowedTime = _time;
     electionDeadline = timeStr;
@@ -42,6 +44,7 @@ contract Election {
     electionKey = _electionKey;
     hashedVoterIds = _hashedVoterIds;
     validVoterCount = _validVoterCount;
+    stvSeatCount = _stvSeatCount;
     electionStatus = "inProgress";
     for (uint i = 0; i < partyNames.length; i++) {
         addParty(partyNames[i]);

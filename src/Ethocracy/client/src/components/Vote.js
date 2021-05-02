@@ -84,7 +84,6 @@ class Vote extends Component {
               web3={this.props.web3}
             />
           }
-          {/* <ElectionResults contract={this.state.contract} accounts={this.props.accounts}/> */}
         </div>
       )
     }

@@ -23,9 +23,9 @@ contract ElectionBuilder{
         return true;
     }
     
-    function deployElection(string memory electionName, string[] memory partyNames, uint time, string memory timeStr, string memory electionType, string memory electionKey, bytes32[] memory hashedVoterIds, uint validVoterCount) public {
+    function deployElection(string memory electionName, string[] memory partyNames, uint time, string memory timeStr, string memory electionType, uint stvSeatCount, string memory electionKey, bytes32[] memory hashedVoterIds, uint validVoterCount) public {
         if (checkDuplicateNames(electionName) == true) {
-            Election election = new Election(electionName, partyNames, time, timeStr, electionType, electionKey, hashedVoterIds, validVoterCount);
+            Election election = new Election(electionName, partyNames, time, timeStr, electionType, stvSeatCount, electionKey, hashedVoterIds, validVoterCount);
             elections.push(election);
             usedNames.push(electionName);
             electionNames[address(election)] = electionName;

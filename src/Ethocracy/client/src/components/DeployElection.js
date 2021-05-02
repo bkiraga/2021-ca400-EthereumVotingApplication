@@ -18,12 +18,14 @@ class DeployElection extends Component {
     this.setType = this.setType.bind(this);
     this.setSelectedTime = this.setSelectedTime.bind(this);
     this.setValidVoters = this.setValidVoters.bind(this);
+    this.setSTVSeatCount = this.setSTVSeatCount.bind(this);
     this.state = {
       candidates: [],
       validVoters: [],
       name: "",
       electionType: 'FPP',
       selectedTime: new Date(),
+      stvSeatCount: 0
     }
   }
 
@@ -84,8 +86,15 @@ class DeployElection extends Component {
     })
   }
 
+  setSTVSeatCount(count) {
+    this.setState(() => {
+      return {
+        stvSeatCount: count
+      }
+    })
+  }
+
   render() {
-    console.log(this.state.selectedTime);
     return (
       <Container style={{padding: "5rem"}}>
         <Row className="justify-content-md-center">
@@ -110,6 +119,9 @@ class DeployElection extends Component {
         <br />
         <ElectionType
           setType={this.setType}
+          type={this.state.electionType}
+          candidates={this.state.candidates}
+          setSTVSeatCount={this.setSTVSeatCount}
         />
         <br />
           <DeadlineDatePicker
@@ -132,6 +144,7 @@ class DeployElection extends Component {
         validVoters={this.state.validVoters}
         name={this.state.name}
         electionType={this.state.electionType}
+        stvSeatCount={this.state.stvSeatCount}
       />
 
           </FormGroup>

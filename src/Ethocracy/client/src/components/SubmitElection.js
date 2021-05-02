@@ -25,10 +25,6 @@ class SubmitElection extends Component {
     const timeStrFormat = hours + ":" + minutes + "/" + day + "/" + month + "/" + date.getFullYear();
 
     const encrypt = require("../encrypt");
-    // const keys = encrypt.generateKeys();
-    // const electionKey = keys.public_key;
-    // const resultKey = keys.private_key;
-    // const resultKey = "abcde";
 
     await fetch(`/api/generateKeys?name=${encodeURIComponent(this.props.name)}&deadline=${selectedTimestamp}`)
       .then(response => response.json())
@@ -45,7 +41,7 @@ class SubmitElection extends Component {
     }
     const validVoterCount = hashedVoterIds.length;
     
-    await this.props.electionBuilder.methods.deployElection(this.props.name, this.props.candidates, time, timeStrFormat, this.props.electionType, this.state.electionKey, hashedVoterIds, validVoterCount).send({from: this.props.accounts[0]});
+    await this.props.electionBuilder.methods.deployElection(this.props.name, this.props.candidates, time, timeStrFormat, this.props.electionType, this.props.stvSeatCount, this.state.electionKey, hashedVoterIds, validVoterCount).send({from: this.props.accounts[0]});
   }
 
   render() {

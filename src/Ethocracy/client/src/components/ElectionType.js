@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Form, InputGroup } from "react-bootstrap";
+import STVSeatCountPicker from "./STVSeatCountPicker";
 
 class ElectionType extends Component {
     constructor(props){
@@ -10,6 +11,9 @@ class ElectionType extends Component {
     handleSubmitType(e) {
       e.preventDefault();
       this.props.setType(this.electionType.value);
+      if (this.electionType.value === "FPP") {
+        this.props.setSTVSeatCount(0);
+      }
     }
   
     render() {
@@ -26,6 +30,7 @@ class ElectionType extends Component {
               </Form.Control>
             </InputGroup>
           </Form>
+          {this.props.type === "STV" ? <STVSeatCountPicker candidates={this.props.candidates} setSTVSeatCount={this.props.setSTVSeatCount}/>: " "}
         </div>
       )
     }
