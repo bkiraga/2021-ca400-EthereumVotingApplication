@@ -52,7 +52,11 @@ contract Election {
   }
 
   function getAddress () public view returns (address) {
-      return address(this);
+    return address(this);
+  }
+
+  function getBallots() public view returns (string[] memory) {
+    return ballots;
   }
 
   function releaseResultKey (string memory _resultKey) public {

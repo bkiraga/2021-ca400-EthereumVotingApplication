@@ -13,6 +13,20 @@ contract ElectionBuilder{
     mapping(address => string) public electionNames;
     mapping(address => string) public electionDeadlines;
     mapping(address => string) public electionTypes;
+    mapping(address => uint) public userElectionCount;
+    mapping(address => address[]) public electionCreators;
+    mapping(address => uint) public userBallotCount;
+    mapping(address => string[]) public userBallots;
+
+    struct ElectionData {
+        string name;
+        string deadline;
+        string electionType;
+    }
+
+    function getElectionData(address _address) public view returns (ElectionData memory) {
+        return ElectionData(electionNames[_address], electionDeadlines[_address], electionTypes[_address]);
+    }
 
     function checkDuplicateNames(string memory electionName) public view returns (bool) {
         for (uint i = 0; i < electionCount; i++) {
@@ -31,6 +45,8 @@ contract ElectionBuilder{
             electionNames[address(election)] = electionName;
             electionDeadlines[address(election)] = timeStr;
             electionTypes[address(election)] = electionType;
+            electionCreators[msg.sender].push(address(election));
+            userElectionCount[msg.sender] += 1;
             electionCount++;
         }
     }

@@ -14,6 +14,7 @@ import NavigationBar from "./components/NavigationBar";
 import * as ReactBootStrap from "react-bootstrap";
 
 import AboutUs from "./components/AboutUs";
+import MyElections from "./components/MyElections.js";
 
 class App extends Component {
   state = {
@@ -53,6 +54,7 @@ class App extends Component {
         <Route exact path="/" component={Home} />
         <Route exact path="/create" component={() => (<DeployElection electionBuilder={this.electionBuilder} accounts={this.accounts} web3={this.web3}/>)} />
         <Route exact path="/vote" component={() => (<Vote electionBuilder={this.electionBuilder} accounts={this.accounts} candidates={this.candidates} web3={this.web3}/>)} />
+        <Route exact path="/myelections" component={() => (<MyElections electionBuilder={this.electionBuilder} accounts={this.accounts} web3={this.web3}/>)} />
         </Switch>
       </div>
     ); 

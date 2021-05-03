@@ -50,16 +50,12 @@ class ElectionResults extends Component {
   
     async getBallots() {
       const ballotCount = await this.props.contract.methods.ballotCount().call();
-      let ballots = [];
       this.setState(() => {
         return {
           ballotCount: ballotCount
         }
       })
-      for (let i = 0; i < ballotCount; i++){
-        let ballot = await this.props.contract.methods.ballots(i).call();
-        ballots.push(ballot);
-      }
+      const ballots = await this.props.contract.methods.getBallots().call();
       this.setState(() => {
         return {
           ballots: ballots
