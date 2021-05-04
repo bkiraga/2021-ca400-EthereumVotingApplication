@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Button } from "react-bootstrap";
 
 class SubmitElection extends Component {
   constructor(props){
@@ -47,7 +48,7 @@ class SubmitElection extends Component {
   render() {
     return (
       <div>
-        <button onClick={this.handleDeployElection} disabled={this.props.candidates.length < 2 || this.props.name === ""}>Deploy Election</button>
+        <Button onClick={this.handleDeployElection} disabled={this.props.candidates.length < 2 || this.props.name === ""}>Deploy Election</Button>
       </div>
     )
   }
