@@ -11,11 +11,11 @@ const NavigationBar = (props) => (
   <Navbar.Toggle aria-controls="responsive-navbar-nav" />
   <Navbar.Collapse id="responsive-navbar-nav">
     <Nav className="mr-auto">
-      <Nav.Link><Link style={{ color: 'inherit', textDecoration: 'inherit'}} className="text-link" to="/">Home</Link></Nav.Link>
-      <Nav.Link><Link style={{ color: 'inherit', textDecoration: 'inherit'}} to="/vote">Vote</Link></Nav.Link>
-      <Nav.Link><Link style={{ color: 'inherit', textDecoration: 'inherit'}} to="/create">Create</Link></Nav.Link>
-      <Nav.Link><Link style={{ color: 'inherit', textDecoration: 'inherit'}} to="/myelections">MyElections</Link></Nav.Link>
-      <Nav.Link><Link style={{ color: 'inherit', textDecoration: 'inherit'}} to="/myballots">MyBallots</Link></Nav.Link>
+      <Nav.Link as={Link} to="/">Home</Nav.Link>
+      <Nav.Link as={Link} to="/vote">Vote</Nav.Link>
+      <Nav.Link as={Link} to="/create">Create</Nav.Link>
+      <Nav.Link as={Link} to="/myelections">My Elections</Nav.Link>
+      <Nav.Link as={Link} to="/myballots">My Ballots</Nav.Link>
       {/* <Nav.Link as={Link} style={{ color: 'inherit', textDecoration: 'inherit'}} className="text-link" to="/">Home</Nav.Link>
       <Nav.Link as={Link} style={{ color: 'inherit', textDecoration: 'inherit'}} to="/vote">Vote</Nav.Link>
       <Nav.Link as={Link} style={{ color: 'inherit', textDecoration: 'inherit'}} to="/create">Create</Nav.Link> */}
