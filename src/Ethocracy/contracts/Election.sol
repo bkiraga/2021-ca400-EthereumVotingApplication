@@ -2,7 +2,10 @@
 pragma solidity >=0.4.22 <0.8.0;
 pragma experimental ABIEncoderV2;
 
+import "./ElectionBuilder.sol";
+
 contract Election {
+
   struct Party {
       string name;
       uint id;
@@ -35,8 +38,9 @@ contract Election {
   uint validVoterCount;
 
   uint public stvSeatCount;
+  ElectionBuilder public electionBuilder;
 
-  constructor(string memory _electionName, string[] memory partyNames, uint _time, string memory timeStr, string memory _electionType, uint _stvSeatCount, string memory _electionKey, bytes32[] memory _hashedVoterIds, uint _validVoterCount) public {
+  constructor(string memory _electionName, string[] memory partyNames, uint _time, string memory timeStr, string memory _electionType, uint _stvSeatCount, string memory _electionKey, bytes32[] memory _hashedVoterIds, uint _validVoterCount, address _electionBuilder) public {
     electionName = _electionName;
     allowedTime = _time;
     electionDeadline = timeStr;
@@ -45,6 +49,7 @@ contract Election {
     hashedVoterIds = _hashedVoterIds;
     validVoterCount = _validVoterCount;
     stvSeatCount = _stvSeatCount;
+    electionBuilder = ElectionBuilder(_electionBuilder);
     electionStatus = "inProgress";
     for (uint i = 0; i < partyNames.length; i++) {
         addParty(partyNames[i]);
@@ -89,5 +94,6 @@ contract Election {
       ballotCount++;
       voters[msg.sender] = true;
       spentVoterIds[_voterId] = true;
+      electionBuilder.addUserBallot(electionName, msg.sender, _vote);
   }
 }

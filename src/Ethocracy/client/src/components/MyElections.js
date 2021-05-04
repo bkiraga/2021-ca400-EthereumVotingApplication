@@ -5,8 +5,6 @@ import MyElectionsTable from "./MyElectionsTable";
 class MyElections extends Component {
   constructor(props) {
     super(props);
-    // this.handleGetMyElections = this.handleGetMyElections.bind(this);
-    // this.handleGetMyVotes = this.handleGetMyVotes.bind(this);
     this.state = {
       myElections: []
     }
@@ -31,41 +29,11 @@ class MyElections extends Component {
     console.log(this.state.myElections);
   }
 
-  // async getElections() {
-  //   let elections = [];
-  //   let electionCount = await this.props.electionBuilder.methods.electionCount().call();
-  //   for (let i = 0; i < electionCount; i++) {
-  //     let electionAddress = await this.props.electionBuilder.methods.elections(i).call();
-  //     let electionData = await this.props.electionBuilder.methods.getElectionData(electionAddress).call();
-  //     let election = {name: electionData.name, address: electionAddress, type: electionData.electionType, deadline: electionData.deadline};
-  //     elections.push(election);
-  //   }
-  //   this.setState(() => {
-  //     return {
-  //       elections: elections
-  //     }
-  //   })
-  // }
-
   render() {
     return (
       <div>
         <p>My Elections</p>
         <MyElectionsTable myElections={this.state.myElections}/>
-        {/* <ReactBootStrap.Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Address</th>
-                  <th>Type</th>
-                  <th>Deadline</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.myElections.map((myElection, index) => <ElectionAddress key={index} name={myElection.name} address={myElection.address} type={election.type} deadline={election.deadline}/>)}
-              </tbody>
-            </ReactBootStrap.Table> */}
-
       </div>
     );
   }

@@ -15,6 +15,7 @@ const NavigationBar = (props) => (
       <Nav.Link><Link style={{ color: 'inherit', textDecoration: 'inherit'}} to="/vote">Vote</Link></Nav.Link>
       <Nav.Link><Link style={{ color: 'inherit', textDecoration: 'inherit'}} to="/create">Create</Link></Nav.Link>
       <Nav.Link><Link style={{ color: 'inherit', textDecoration: 'inherit'}} to="/myelections">MyElections</Link></Nav.Link>
+      <Nav.Link><Link style={{ color: 'inherit', textDecoration: 'inherit'}} to="/myballots">MyBallots</Link></Nav.Link>
       {/* <Nav.Link as={Link} style={{ color: 'inherit', textDecoration: 'inherit'}} className="text-link" to="/">Home</Nav.Link>
       <Nav.Link as={Link} style={{ color: 'inherit', textDecoration: 'inherit'}} to="/vote">Vote</Nav.Link>
       <Nav.Link as={Link} style={{ color: 'inherit', textDecoration: 'inherit'}} to="/create">Create</Nav.Link> */}
