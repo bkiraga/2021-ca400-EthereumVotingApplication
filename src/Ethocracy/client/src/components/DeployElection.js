@@ -56,9 +56,13 @@ class DeployElection extends Component {
       }
     } else if (setting === 'rm') {
       this.setState((prevState) => {
-        prevState.candidates.pop();
+        let arr = prevState.candidates;
+        let index = arr.indexOf(candidate);
+        arr.splice(index, 1);
+        // prevState.candidates.pop();
         return {
-          candidates: prevState.candidates
+          // candidates: prevState.candidates 
+          candidates: arr
         }
       })
     } else if (setting === 'rmAll') {
@@ -104,6 +108,7 @@ class DeployElection extends Component {
           <FormGroup>
           <CandidateList
               candidates={this.state.candidates}
+              setCandidates={this.setCandidates}
             />
           <AddCandidate
             setCandidates={this.setCandidates}

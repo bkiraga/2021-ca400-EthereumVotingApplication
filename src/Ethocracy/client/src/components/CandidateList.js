@@ -11,7 +11,7 @@ class CandidateList extends Component {
         <div>
           <ListGroup>
           {
-            this.props.candidates.map((candidate) => <Candidate key={candidate} candidateValue={candidate}/>)
+            this.props.candidates.map((candidate) => <Candidate key={candidate} candidateValue={candidate} setCandidates={this.props.setCandidates}/>)
           }
             
           </ListGroup>
