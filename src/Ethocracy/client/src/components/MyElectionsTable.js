@@ -9,7 +9,7 @@ class MyElectionsTable extends Component {
   render() {
     return(
       <Container>
-        <Table striped bordered hover>
+        <Table striped bordered hover responsive>
           <thead>
             <tr>
               <th>Name</th>

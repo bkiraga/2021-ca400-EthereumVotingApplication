@@ -44,6 +44,7 @@ class Vote extends Component {
           contract: newContract
         }
       })
+      console.log(this.state.contract);
     }
   
     setSelectedElection(bool) {
@@ -66,6 +67,9 @@ class Vote extends Component {
             /> :
             <ElectionAddressList
               elections={this.state.elections}
+              setSelectedElection={this.setSelectedElection}
+              setContract={this.setContract}
+              web3={this.props.web3}
             />
           }
           {
