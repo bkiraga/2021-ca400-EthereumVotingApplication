@@ -129,6 +129,7 @@ class DeployElection extends Component {
           setSelectedTime={this.setSelectedTime}
            />
           <br />
+          <br />
                   
         <ValidVoterSubmit
         setValidVoters={this.setValidVoters}

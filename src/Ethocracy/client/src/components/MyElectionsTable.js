@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import * as ReactBootStrap from "react-bootstrap";
+import { Container, Table } from "react-bootstrap";
 import MyElectionEntry from "./MyElectionsEntry";
 
 class MyElectionsTable extends Component {
@@ -8,8 +8,8 @@ class MyElectionsTable extends Component {
   }
   render() {
     return(
-      <div>
-        <ReactBootStrap.Table striped bordered hover>
+      <Container>
+        <Table striped bordered hover>
           <thead>
             <tr>
               <th>Name</th>
@@ -21,8 +21,8 @@ class MyElectionsTable extends Component {
           <tbody>
             {this.props.myElections.map((myElection, index) => <MyElectionEntry key={index} name={myElection.name} address={myElection.address} type={myElection.type} deadline={myElection.deadline}/>)}
           </tbody>
-      </ReactBootStrap.Table>
-      </div>
+      </Table>
+      </Container>
     )
   }
 }

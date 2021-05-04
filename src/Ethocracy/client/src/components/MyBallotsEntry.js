@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import * as ReactBootStrap from "react-bootstrap";
+import {Container, Col, Row} from "react-bootstrap";
+
 
 class MyBallotsEntry extends Component {
   constructor(props) {
