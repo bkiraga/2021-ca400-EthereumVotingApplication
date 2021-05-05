@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ResultsTable from "./ResultsTable";
 import tallyFPPBallots from "../election_tools/fppTallyAlgorithm";
 import tallySTVBallots from "../election_tools/stvTallyAlgorithm";
+import { Alert, Button } from "react-bootstrap";
 
 class ElectionResults extends Component {
     mounted = false;
@@ -181,16 +182,17 @@ class ElectionResults extends Component {
       if (this.state.electionStatus === "inProgress") {
         return (
           <div>
-            <h3>Election Status: Voting in progress</h3>
-            <p>Waiting for election creator to release the results</p>
-            <button onClick={this.handleUnlockResults}>Unlock results</button>
+            <br />
+            <Alert variant="info">Results may be released below after the deadline.</Alert> 
+            <Button onClick={this.handleUnlockResults}>Release results</Button>
           </div>
         )
       } else {
           return (
             <div>
-              <p>Election Results</p>
-              <button onClick={this.handleElectionResults}>Get Result</button>
+              <br />
+              <Alert variant="danger">Voting has ended and the results have been released.</Alert> 
+              <Button onClick={this.handleElectionResults}>View results</Button>
               {this.state.results.length !== 0 ? <ResultsTable winner={this.state.winner} results={this.state.results} type={this.state.electionType}/> : " "}
             </div>
           )

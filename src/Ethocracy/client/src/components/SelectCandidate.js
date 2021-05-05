@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container } from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import ElectionInfo from "./ElectionInfo";
 import { Multiselect } from "multiselect-react-dropdown";
 
@@ -98,26 +98,42 @@ class SelectCandidate extends Component {
     render() {
       return (
         <Container>
+          <Row className="justify-content-md-center">
+          <Col sm={2}>
+          </Col>
+          <Col sm={6}>
           <ElectionInfo contract={this.props.contract}/>
-          <form onSubmit={this.handleInputVoterId}>
-          <input type="text" name="inputVoterId"/>
-          <button disabled={this.state.voterId !== ""}>Input Voter ID</button>
-          </form>
+          <Form onSubmit={this.handleInputVoterId}>
+          <InputGroup>
+            <Form.Control type="input" name="inputVoterId" placeholder="Enter your Voter ID"/>
+            <InputGroup.Append>
+              <Button type="submit" variant="secondary">Set ID</Button>
+            </InputGroup.Append> 
+            </InputGroup>
+          </Form>
+          <br />
           {
             this.state.electionType === "FPP" ?
             <Multiselect
               options={this.state.candidates}
               singleSelect
+              placeholder="Select preferred candidate"
               onSelect={this.onSelectFPPBallot}
               displayValue="name"
             /> :
             <Multiselect
               options={this.state.candidates}
               onSelect={this.onSelectSTVBallot}
+              placeholder="Select preferred candidates"
               displayValue="name"
             />
           }
-          <button onClick={this.handleCastVote} disabled={this.state.voterId === ""}>Vote</button>
+          <br />
+          <Button onClick={this.handleCastVote} variant="success" disabled={this.state.voterId === ""}>Submit your ballot</Button>
+          </Col>
+          <Col sm={2}>
+          </Col>
+          </Row>
         </Container>
       )
 

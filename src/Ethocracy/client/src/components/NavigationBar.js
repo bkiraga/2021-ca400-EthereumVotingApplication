@@ -7,8 +7,18 @@ import "../App.css";
 const NavigationBar = (props) => (
   <div>
   <Navbar bg="dark" variant="dark">
-  <Navbar.Brand><Link style={{ color: 'inherit', textDecoration: 'inherit'}} to="/">Ethocracy</Link></Navbar.Brand>
-  <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+  <Navbar.Brand as={Link} to="/">
+  <img
+  src={require("../img/ethlogo.png")}
+  width="32"
+  height="52"
+  className="d-inline-block align-top"
+  alt="logo"
+  />{" "}
+  </Navbar.Brand>
+  <Navbar.Brand>
+  Ethocracy
+  </Navbar.Brand>
   <Navbar.Collapse id="responsive-navbar-nav">
     <Nav className="mr-auto">
       <Nav.Link as={Link} to="/">Home</Nav.Link>

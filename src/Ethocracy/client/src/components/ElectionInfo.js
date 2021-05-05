@@ -37,8 +37,8 @@ class ElectionInfo extends Component {
         <div>
           <br />
           <h2>{this.state.electionName}</h2>
-          <br/>
-          <Alert variant="primary">Votes are being accepted until {this.formatDeadline(this.state.electionDeadline)}</Alert> 
+
+          <Alert variant="info">Votes are being accepted until {this.formatDeadline(this.state.electionDeadline)}</Alert> 
         </div>
       )
     }
