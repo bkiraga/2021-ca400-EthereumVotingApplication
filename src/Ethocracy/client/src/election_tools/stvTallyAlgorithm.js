@@ -98,4 +98,4 @@ const tallySTVBallots = (ballots, seatsNumber, candidateCount) => {
 
 // console.log(tallySTVBallots(ballots, 2 , 4));
 
-// export default tallySTVBallots;
+export default tallySTVBallots;
