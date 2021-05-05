@@ -23,7 +23,7 @@ class ElectionAddress extends Component {
           <td>{this.props.address}</td>
           <td>{this.props.type}</td>
           <td>{this.props.deadline}</td>
-          <td><Button onClick={this.handleOnClick}>Go</Button></td>
+          <td><Button onClick={this.handleOnClick} variant="success">Go</Button></td>
         </tr>
       )
     }

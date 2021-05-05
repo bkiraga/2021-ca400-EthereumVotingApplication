@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Container } from "react-bootstrap";
 import ElectionInfo from "./ElectionInfo";
 
 class SelectCandidate extends Component {
@@ -57,13 +58,14 @@ class SelectCandidate extends Component {
   
     render() {
       return (
-        <div>
+        <Container>
           <ElectionInfo contract={this.props.contract}/>
           <form onSubmit={this.handleInputVoterId}>
           <input type="text" name="inputVoterId"/>
           <button disabled={this.state.voterId !== ""}>Input Voter ID</button>
           </form>
-          <p>Candidates:</p>
+          <br />
+          <h2>Select a candidate below:</h2>
           <form onSubmit={(e) => {
             e.preventDefault()
             console.log("candidate id: " + this.candidateId.value);
@@ -76,8 +78,9 @@ class SelectCandidate extends Component {
             </select>
             <button type='submit' disabled={this.state.voterId === ""}>Vote</button>
           </form>
-        </div>
+        </Container>
       )
+
     }
   }
 

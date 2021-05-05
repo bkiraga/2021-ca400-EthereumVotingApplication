@@ -17,7 +17,7 @@ class ElectionAddressList extends Component {
         return (
           <div>
             <br />
-            <h2>Elections:</h2>
+            <h2>Elections</h2>
             <Table striped bordered hover responsive>
               <thead>
                 <tr>
@@ -25,6 +25,7 @@ class ElectionAddressList extends Component {
                   <th>Address</th>
                   <th>Type</th>
                   <th>Deadline</th>
+                  <th>Link</th>
                 </tr>
               </thead>
               <tbody>
