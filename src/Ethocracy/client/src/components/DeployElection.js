@@ -151,6 +151,7 @@ class DeployElection extends Component {
         name={this.state.name}
         electionType={this.state.electionType}
         stvSeatCount={this.state.stvSeatCount}
+        setName={this.setName}
       />
 
           </FormGroup>

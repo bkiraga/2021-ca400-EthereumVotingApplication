@@ -11,7 +11,6 @@ class ElectionName extends Component {
       e.preventDefault();
       const name = e.target.elements.setName.value.trim();
       const checkDuplicates = await this.props.electionBuilder.methods.checkDuplicateNames(name).call();
-      console.log(checkDuplicates);
       if (checkDuplicates) {
         this.props.setName(name);
       } else {

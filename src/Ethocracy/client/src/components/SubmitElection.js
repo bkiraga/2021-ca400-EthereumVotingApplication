@@ -34,15 +34,15 @@ class SubmitElection extends Component {
           electionKey: data.public_key
         }
       }));
-    
-    let hashedVoterIds = [];
-    for (let i = 0; i < this.props.validVoters.length; i++) {
-      let hash = encrypt.hashVoterId(this.props.validVoters[i]);
-      hashedVoterIds.push(hash);
-    }
-    const validVoterCount = hashedVoterIds.length;
-    
-    await this.props.electionBuilder.methods.deployElection(this.props.name, this.props.candidates, time, timeStrFormat, this.props.electionType, this.props.stvSeatCount, this.state.electionKey, hashedVoterIds, validVoterCount).send({from: this.props.accounts[0]});
+      let hashedVoterIds = [];
+      for (let i = 0; i < this.props.validVoters.length; i++) {
+        let hash = encrypt.hashVoterId(this.props.validVoters[i]);
+        hashedVoterIds.push(hash);
+      }
+      const validVoterCount = hashedVoterIds.length;
+      
+      await this.props.electionBuilder.methods.deployElection(this.props.name, this.props.candidates, time, timeStrFormat, this.props.electionType, this.props.stvSeatCount, this.state.electionKey, hashedVoterIds, validVoterCount).send({from: this.props.accounts[0]});
+      this.props.setName("");
   }
 
   render() {
