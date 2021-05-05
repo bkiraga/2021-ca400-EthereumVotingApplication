@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import * as ReactBootStrap from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import ElectionAddress from "./ElectionAddress";
 
 class ElectionAddressList extends Component {
@@ -15,8 +15,9 @@ class ElectionAddressList extends Component {
       } else {
         return (
           <div>
-            <p>Elections:</p>
-            <ReactBootStrap.Table striped bordered hover>
+            <br />
+            <h2>Elections:</h2>
+            <Table striped bordered hover>
               <thead>
                 <tr>
                   <th>Name</th>
@@ -28,7 +29,7 @@ class ElectionAddressList extends Component {
               <tbody>
                 {this.props.elections.map((election, index) => <ElectionAddress key={index} name={election.name} address={election.address} type={election.type} deadline={election.deadline}/>)}
               </tbody>
-            </ReactBootStrap.Table>
+            </Table>
           </div>
         )
       }

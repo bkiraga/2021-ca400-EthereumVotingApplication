@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import { Form } from "react-bootstrap";
 
 class ValidVoterSubmit extends Component {
+
     constructor(props){
       super(props);
       this.handleUploadIdFile = this.handleUploadIdFile.bind(this);
+      this.isValidated = false;
     }
   
     handleUploadIdFile(e) {
@@ -17,13 +19,14 @@ class ValidVoterSubmit extends Component {
         const fileContent = e.target.result.trim().split(",");
         this.props.setValidVoters(fileContent);
       }
+      this.isValidated = true; 
     }
   
     render() {
       return (
-        <div>
-          <input type="file" name="file" onChange={this.handleUploadIdFile}/>
-        </div>
+        <Form validated={this.isValidated}>
+          <Form.File type="file" id="file" label ={this.isValidated ? "File Uploaded" : "Upload Valid Voter IDs"} onChange={this.handleUploadIdFile} custom/>
+        </Form>
       )
     }
   }

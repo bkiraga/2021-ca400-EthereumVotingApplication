@@ -3,6 +3,7 @@ import SelectCandidate from "./SelectCandidate";
 import ElectionAddressList from "./ElectionAddressList";
 import ElectionResults from "./ElectionResults";
 import SelectElection from "./SelectElection";
+import { Container } from "react-bootstrap";
 
 class Vote extends Component {
     constructor(props){
@@ -55,7 +56,7 @@ class Vote extends Component {
   
     render() {
       return (
-        <div>
+        <Container>
           {
             this.state.selectedElection ? 
             <SelectCandidate
@@ -81,7 +82,7 @@ class Vote extends Component {
               web3={this.props.web3}
             />
           }
-        </div>
+        </Container>
       )
     }
   }
