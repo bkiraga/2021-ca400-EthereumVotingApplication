@@ -1,8 +1,10 @@
 import React, { Component } from "react";
+import { Alert } from "react-bootstrap";
 
 class ElectionInfo extends Component {
     constructor(props) {
       super(props);
+      this.formatDeadline = this.formatDeadline.bind(this);
       this.state = {
         electionName: "",
         electionDeadline: "",
@@ -22,13 +24,21 @@ class ElectionInfo extends Component {
         }
       })
     }
+
+    formatDeadline = (d) => {
+      let time = d.split("/");
+      time.splice(1, 0, "on")
+      time = time.join(" ");
+      return time;  
+    }
     
     render() {
       return (
         <div>
-          <h3>{this.state.electionName}</h3>
+          <br />
+          <h2>{this.state.electionName}</h2>
           <br/>
-          Open until: {this.state.electionDeadline}
+          <Alert variant="primary">Votes are being accepted until {this.formatDeadline(this.state.electionDeadline)}</Alert> 
         </div>
       )
     }

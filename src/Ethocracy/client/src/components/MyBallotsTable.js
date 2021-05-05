@@ -5,11 +5,26 @@ import MyBallotsEntry from "./MyBallotsEntry";
 class MyBallotsTable extends Component {
   constructor(props) {
     super(props);
+    this.breakBallot = this.breakBallot.bind(this);
   }
+
+  // breaks strings into size 16 chunks seperated by newline characters to allow proper display
+  breakBallot(ballot) {
+    let chunks = []
+    let i = 0;
+    let n = ballot.length;
+    while (i < n) {
+      chunks.push(ballot.slice(i, i+=16))
+      chunks.push("\n")
+    }
+    let formattedBallots = chunks.join("");
+    return formattedBallots;
+  }
+
   render() {
     return (
       <Container>
-          <Table striped bordered hover>
+          <Table striped bordered hover responsive>
             <thead>
               <tr>
                 <th>Election Name</th>
@@ -23,7 +38,7 @@ class MyBallotsTable extends Component {
                   key={index}
                   name={myBallot.name}
                   address={myBallot.electionAddress}
-                  ballot={myBallot.ballot}
+                  ballot={this.breakBallot(myBallot.ballot)}
                 />
               ))}
             </tbody>

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Container } from "react-bootstrap";
 import ElectionInfo from "./ElectionInfo";
 import { Multiselect } from "multiselect-react-dropdown";
 
@@ -96,7 +97,7 @@ class SelectCandidate extends Component {
   
     render() {
       return (
-        <div>
+        <Container>
           <ElectionInfo contract={this.props.contract}/>
           <form onSubmit={this.handleInputVoterId}>
           <input type="text" name="inputVoterId"/>
@@ -117,8 +118,9 @@ class SelectCandidate extends Component {
             />
           }
           <button onClick={this.handleCastVote} disabled={this.state.voterId === ""}>Vote</button>
-        </div>
+        </Container>
       )
+
     }
   }
 
