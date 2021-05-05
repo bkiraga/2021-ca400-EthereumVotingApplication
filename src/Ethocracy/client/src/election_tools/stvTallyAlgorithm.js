@@ -1,9 +1,14 @@
-// const ballots = [[1,2,3,0],[0,1,2,3],[3,1,2,0],[2,0,3,1],[0,2,3,1],[3,0,2,1],[2,0,3,1],[2,0,2,1],[2,3,1,0],[2,3,0,1]];
-const ballots = [[0,3,2,1],[2,3,0,1],[0,1,2,3],[1,0,3,2],[2,0,1,3],[2,0,3,1],[1,3,0,2],[0,1,2,3],[2,0,1,3],[2,3,1,0]];
+// // const ballots = [[1,2,3,0],[0,1,2,3],[3,1,2,0],[2,0,3,1],[0,2,3,1],[3,0,2,1],[2,0,3,1],[2,0,2,1],[2,3,1,0],[2,3,0,1]];
+// const ballots = [[0,3,2,1],[2,3,0,1],[0,1,2,3],[1,0,3,2],[2,0,1,3],[2,0,3,1],[1,3,0,2],[0,1,2,3],[2,0,1,3],[2,3,1,0]];
+// const ballots = [[0,3,2,1],[0,3,2,1],[1,2,3,0],[3,2,0,1],[1,0,3,2],[0,2,3,1],[1,2,0,3],[3,2,1,0],[3,2,1,0],[3,2,1,0]];
+// const ballots = [[0,3,2,1],[0,3,2,1],[0,3,2,1]]   //a,d,c,b
+// const ballots = [[0,3,2,1],[2]]
+
 
 const tallySTVBallots = (ballots, seatsNumber, candidateCount) => {
     const quota = Math.floor(ballots.length / (seatsNumber + 1) + 1);
-    candidates = new Map();
+    console.log(quota);
+    let candidates = new Map();
     for (let i = 0; i < candidateCount; i++) {
         candidates.set(i, 0);
     }
@@ -12,6 +17,8 @@ const tallySTVBallots = (ballots, seatsNumber, candidateCount) => {
         let value = candidates.get(ballots[i][0]);
         candidates.set(ballots[i][0], value + 1);
     }
+
+    console.log("abc");
 
     let passedQuota = [];
     let removedCandidates = [];
@@ -85,7 +92,10 @@ const tallySTVBallots = (ballots, seatsNumber, candidateCount) => {
 
         rounds += 1;
     }
+    // console.log("xyz");
     return passedQuota;
 }
 
-console.log(tallySTVBallots(ballots, 2, 4));
+// console.log(tallySTVBallots(ballots, 2 , 4));
+
+// export default tallySTVBallots;

@@ -14,7 +14,7 @@ class STVSeatCountPicker extends Component {
   render() {
     const candidateCount = this.props.candidates.length;
     const seatCountOptions = [];
-    for (let i = 1; i < candidateCount-1; i++) {
+    for (let i = 2; i < candidateCount; i++) {
       seatCountOptions.push(i);
     }
     return (

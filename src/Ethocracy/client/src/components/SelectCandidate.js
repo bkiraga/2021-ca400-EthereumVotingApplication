@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ElectionInfo from "./ElectionInfo";
+import { Multiselect } from "multiselect-react-dropdown";
 
 class SelectCandidate extends Component {
     constructor(bind) {
@@ -7,19 +8,27 @@ class SelectCandidate extends Component {
       this.getCandidates = this.getCandidates.bind(this);
       this.hideVote = this.hideVote.bind(this);
       this.handleInputVoterId = this.handleInputVoterId.bind(this);
+      this.onSelectFPPBallot = this.onSelectFPPBallot.bind(this);
+      this.onSelectSTVBallot = this.onSelectSTVBallot.bind(this);
+      this.handleCastVote = this.handleCastVote.bind(this);
       this.state = {
         candidates: [],
         electionKey: "",
-        voterId: ""
+        voterId: "",
+        electionType: "",
+        FPPballot: "",
+        STVballot: "",
       }
     }
   
     componentDidMount = async () => {
       await this.getCandidates();
       const electionKey = await this.props.contract.methods.electionKey().call();
+      const electionType = await this.props.contract.methods.electionType().call();
       this.setState(() => {
         return {
-          electionKey: electionKey
+          electionKey: electionKey,
+          electionType: electionType
         }
       })
     }
@@ -54,6 +63,36 @@ class SelectCandidate extends Component {
       const ballot = encrypt.maskBallot(vote, this.state.electionKey);
       return ballot;
     }
+
+    onSelectFPPBallot(data) {
+      this.setState(() => {
+        return {
+          FPPballot: data
+        }
+      })
+    }
+
+    onSelectSTVBallot(data) {
+      this.setState(() => {
+        return {
+          STVballot: data
+        }
+      })
+    }
+
+    async handleCastVote() {
+      if (this.state.electionType === "FPP") {
+        await this.props.contract.methods.castVote(this.hideVote(this.state.FPPballot[0].id), "0x" + this.state.voterId).send({from: this.props.accounts[0]})
+      }
+      else {
+        let formatedSTVballot = "";
+        for (let i = 0; i < this.state.STVballot.length; i++) {
+          formatedSTVballot += this.state.STVballot[i].id + "|";
+        }
+        formatedSTVballot = formatedSTVballot.slice(0, -1);
+        await this.props.contract.methods.castVote(this.hideVote(formatedSTVballot), "0x" + this.state.voterId).send({from: this.props.accounts[0]})
+      }
+    }
   
     render() {
       return (
@@ -63,19 +102,21 @@ class SelectCandidate extends Component {
           <input type="text" name="inputVoterId"/>
           <button disabled={this.state.voterId !== ""}>Input Voter ID</button>
           </form>
-          <p>Candidates:</p>
-          <form onSubmit={(e) => {
-            e.preventDefault()
-            console.log("candidate id: " + this.candidateId.value);
-            this.props.contract.methods.castVote(this.hideVote(this.candidateId.value), "0x" + this.state.voterId).send({from: this.props.accounts[0]});
-            }}>
-            <select ref={(input) => this.candidateId = input} className='form-control'>
-              {this.state.candidates.map((candidate) => {
-                return <option key={candidate.id} value={candidate.id}>{candidate.name}</option>
-              })}
-            </select>
-            <button type='submit' disabled={this.state.voterId === ""}>Vote</button>
-          </form>
+          {
+            this.state.electionType === "FPP" ?
+            <Multiselect
+              options={this.state.candidates}
+              singleSelect
+              onSelect={this.onSelectFPPBallot}
+              displayValue="name"
+            /> :
+            <Multiselect
+              options={this.state.candidates}
+              onSelect={this.onSelectSTVBallot}
+              displayValue="name"
+            />
+          }
+          <button onClick={this.handleCastVote} disabled={this.state.voterId === ""}>Vote</button>
         </div>
       )
     }

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import ResultsTable from "./ResultsTable"
+import ResultsTable from "./ResultsTable";
+import tallyFPPBallots from "../election_tools/fppTallyAlgorithm";
+import tallySTVBallots from "../election_tools/stvTallyAlgorithm";
 
 class ElectionResults extends Component {
     mounted = false;
@@ -26,9 +28,11 @@ class ElectionResults extends Component {
     componentDidMount = async () => {
       this.mounted = true;
       const electionName = await this.props.contract.methods.electionName().call();
+      const electionType = await this.props.contract.methods.electionType().call();
       this.setState(() => {
         return {
-          electionName: electionName
+          electionName: electionName,
+          electionType: electionType
         }
       })
     }
@@ -102,8 +106,8 @@ class ElectionResults extends Component {
         alert("Election still ongoing");
       }
     }
-  
-    async handleElectionResults() {
+
+    async unmaskElectionBallots() {
       let unmaskedBallots = [];
       await this.getBallots();
       const resultKey = await this.props.contract.methods.resultKey().call();
@@ -117,54 +121,60 @@ class ElectionResults extends Component {
           unmaskedBallotList: unmaskedBallots
         }
       })
+    }
+  
+    async handleElectionResults() {
       await this.getCandidates();
-      let resultMap = new Map();
-      for (let i = 0; i < this.state.candidates.length; i++) {
-        resultMap.set(this.state.candidates[i].name, 0);
-      }
-      for (let i = 0; i < this.state.unmaskedBallotList.length; i++) {
-        for (let [key, value] of resultMap.entries()) {
-          if (key === this.state.candidates[parseInt(this.state.unmaskedBallotList[i], 10)].name) {
-            resultMap.set(key, value+1);
+      await this.unmaskElectionBallots();
+      if (this.state.electionType == "FPP") {
+        const results = tallyFPPBallots(this.state.candidates, this.state.unmaskedBallotList);
+        this.setState(() => {
+          const firstPlace = results[0];
+          const secondPlace = results[1];
+          if (firstPlace.votes !== secondPlace.votes) {
+            return {
+              results: results,
+              winner: firstPlace.candidate
+            }
+          } else {
+            return {
+              results: results,
+              winner: "Draw"
+            }
           }
-        }
-      }
-      let results = [];
-      for (let [key,value] of resultMap.entries()) {
-        results.push({candidate: key, votes: value});
-      }
-  
-      for (let i = 0; i < results.length; i++) {
-        let min = i;
-        for (let j = i+1; j < results.length; j++) {
-          if (results[j].votes < results[min].votes){
-            min = j
+        })
+      } else {
+          let unformatedSTVBallots = [];
+          for(let i = 0; i < this.state.unmaskedBallotList.length; i++) {
+            let ballot = this.state.unmaskedBallotList[i].split("|").map((x) => {return parseInt(x)});
+            unformatedSTVBallots.push(ballot);
           }
-        }
-        if (min !== i) {
-          let tmp = results[i];
-          results[i] = results[min];
-          results[min] = tmp;
-        }
+          const seatNumber = await this.props.contract.methods.stvSeatCount().call();
+          const results = tallySTVBallots(unformatedSTVBallots, seatNumber, this.state.candidates.length);
+          let winnerCandidates = [];
+          let loserCandidates = [];
+          for (let i = 0; i < this.state.candidates.length; i++) {
+            if (results.includes(parseInt(this.state.candidates[i].id))) {
+              winnerCandidates.push(this.state.candidates[i]);
+            } else {
+              loserCandidates.push(this.state.candidates[i]);
+            }
+          }
+          const orderedResultArray = winnerCandidates.concat(loserCandidates);
+          for (let i = 0; i < orderedResultArray.length; i++) {
+            if (winnerCandidates.includes(orderedResultArray[i])) {
+              orderedResultArray[i].res = "W";
+            } else {
+              orderedResultArray[i].res = "L";
+            }
+          }
+          this.setState(() => {
+            return {
+              results: orderedResultArray,
+              winner: results
+            }
+          })
       }
-      results = results.reverse();
-  
-      this.setState(() => {
-        const firstPlace = results[0];
-        const secondPlace = results[1];
-        if (firstPlace.votes !== secondPlace.votes) {
-          return {
-            results: results,
-            winner: firstPlace.candidate
-          }
-        } else {
-          return {
-            results: results,
-            winner: "Draw"
-          }
-        }
-      })
-      console.log(this.state.winner);
     }
   
     render() {
@@ -181,7 +191,7 @@ class ElectionResults extends Component {
             <div>
               <p>Election Results</p>
               <button onClick={this.handleElectionResults}>Get Result</button>
-              {this.state.results.length !== 0 ? <ResultsTable winner={this.state.winner} results={this.state.results}/> : " "}
+              {this.state.results.length !== 0 ? <ResultsTable winner={this.state.winner} results={this.state.results} type={this.state.electionType}/> : " "}
             </div>
           )
       }

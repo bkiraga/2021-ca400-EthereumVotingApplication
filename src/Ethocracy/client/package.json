@@ -8,6 +8,7 @@
     "bootstrap": "^4.6.0",
     "crypto-js": "^4.0.0",
     "date-fns": "^2.19.0",
+    "multiselect-react-dropdown": "^1.6.11",
     "node-rsa": "^1.1.1",
     "react": "16.11.0",
     "react-bootstrap": "^1.5.2",

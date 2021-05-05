@@ -19,14 +19,12 @@ class MyElections extends Component {
       let election = {name: electionData.name, address: electionAddress, type: electionData.electionType, deadline: electionData.deadline};
       myElections.push(election);
     }
-    console.log(myElections);
 
     this.setState(() => {
       return {
         myElections: myElections
       }
     })
-    console.log(this.state.myElections);
   }
 
   render() {
