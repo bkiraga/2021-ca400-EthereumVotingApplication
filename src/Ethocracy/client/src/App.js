@@ -5,17 +5,13 @@ import ElectionContract from "./contracts/Election.json";
 import getWeb3 from "./getWeb3";
 import "./App.css";
 import "react-datepicker/dist/react-datepicker.css";
-import Home from "./components/Home";
-import Create from "./components/Create";
-import Vote from "./components/Vote";
-import VoteInterface from "./components/VoteInterface";
-import DeployElection from "./components/DeployElection";
-import NavigationBar from "./components/NavigationBar";
-import * as ReactBootStrap from "react-bootstrap";
+import Home from "./components/Home/Home";
+import Vote from "./components/ElectionVote/Vote";
+import DeployElection from "./components/ElectionDeployment/DeployElection";
+import NavigationBar from "./components/Home/NavigationBar";
 
-import AboutUs from "./components/AboutUs";
-import MyElections from "./components/MyElections.js";
-import MyBallots from "./components/MyBallots";
+import MyElections from "./components/UserElections/MyElections.js";
+import MyBallots from "./components/UserBallots/MyBallots";
 
 class App extends Component {
   state = {
