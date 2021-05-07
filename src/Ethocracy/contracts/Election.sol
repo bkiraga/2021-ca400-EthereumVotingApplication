@@ -25,7 +25,7 @@ contract Election {
     uint public partyCount = 0;
     uint public ballotCount = 0;
     uint startTime = block.timestamp;
-    uint allowedTime ;
+    uint allowedTime;
 
     Party public winningParty;
     uint public winnerVoteCount = 0;
@@ -63,7 +63,6 @@ contract Election {
         return ballots;
     }
 
-    //
     function releaseResultKey (string memory _resultKey) public {
         resultKey = _resultKey;
         electionStatus = "complete";
