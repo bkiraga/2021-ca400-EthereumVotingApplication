@@ -7,7 +7,6 @@ import ValidVoterSubmit from "./ValidVoterSubmit";
 import SubmitElection from "./SubmitElection";
 import DeadlineDatePicker from "./DeadlineDatePicker";
 import DatePicker from "react-datepicker";
-import {setMinutes, setHours} from "date-fns";
 import { Col, Container, FormGroup, Row } from "react-bootstrap";
 
 class DeployElection extends Component {
