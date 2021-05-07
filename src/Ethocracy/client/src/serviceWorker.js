@@ -10,7 +10,7 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://bit.ly/CRA-PWA
 
-//boilerplate code from truffle's version of create react app: https://www.trufflesuite.com/boxes/react
+//boilerplate code from truffle's version of create react app bootstrap: https://www.trufflesuite.com/boxes/react
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||

@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: MIT
+
+//boilerplate code from truffle's version of create react app bootstrap: https://www.trufflesuite.com/boxes/react
 pragma solidity >=0.4.22 <0.8.0;
 
 contract Migrations {
