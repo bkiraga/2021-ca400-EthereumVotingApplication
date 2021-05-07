@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ListGroup, Button, Container, Row, Col } from "react-bootstrap";
+import { ListGroup } from "react-bootstrap";
 
 class Candidate extends Component {
     constructor(props) {
