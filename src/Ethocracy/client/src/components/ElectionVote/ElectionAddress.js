@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Button } from "react-bootstrap";
-import SelectElection from "./SelectElection";
 import ElectionContract from "../../contracts/Election.json";
 
 class ElectionAddress extends Component {

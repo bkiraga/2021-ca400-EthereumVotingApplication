@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import CandidateList from "./CandidateList";
+import { Col, Container, FormGroup, Row } from "react-bootstrap";
 import AddCandidate from "./AddCandidate";
+import CandidateList from "./CandidateList";
+import DeadlineDatePicker from "./DeadlineDatePicker";
 import ElectionName from "./ElectionName";
 import ElectionType from "./ElectionType";
-import ValidVoterSubmit from "./ValidVoterSubmit";
 import SubmitElection from "./SubmitElection";
-import DeadlineDatePicker from "./DeadlineDatePicker";
-import DatePicker from "react-datepicker";
-import { Col, Container, FormGroup, Row } from "react-bootstrap";
+import ValidVoterSubmit from "./ValidVoterSubmit";
 
 class DeployElection extends Component {
   constructor(props) {
