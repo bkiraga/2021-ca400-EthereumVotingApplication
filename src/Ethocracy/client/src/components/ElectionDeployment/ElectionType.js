@@ -22,11 +22,11 @@ class ElectionType extends Component {
           <Form onChange={this.handleSubmitType}>
             <InputGroup>
               <InputGroup.Prepend>
-                <InputGroup.Text>Election Type</InputGroup.Text>
+                <InputGroup.Text>Electoral System</InputGroup.Text>
               </InputGroup.Prepend>
               <Form.Control as="select" ref={(input) => this.electionType = input} className='selectElectionType'>
-                <option>{'FPP'}</option>
-                <option>{'STV'}</option>
+                <option label="First Past the Post">{'FPP'}</option>
+                <option label="Single Transferable Vote">{'STV'}</option>
               </Form.Control>
             </InputGroup>
           </Form>

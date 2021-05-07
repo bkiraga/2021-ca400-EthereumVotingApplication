@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Form, Row } from "react-bootstrap";
 
 class STVSeatCountPicker extends Component {
   constructor(props) {
@@ -17,16 +18,16 @@ class STVSeatCountPicker extends Component {
     for (let i = 2; i < candidateCount; i++) {
       seatCountOptions.push(i);
     }
-    return (
-      <div>
-        <form onChange={this.handleSubmitSeatCount}>
-          <select ref={(input) => this.electionSeatCount = input} className='selectElectionSeatCount'>
+    return (     
+      <Row className="justify-content-md-center" style={{padding: "1rem"}}>
+        <Form onChange={this.handleSubmitSeatCount}>
+          <Form.Control as="select" ref={(input) => this.electionSeatCount = input} className='selectElectionSeatCount' size="sm" style={{width: "80px"}}>
             {seatCountOptions.map((count) => {
                 return <option key={count} value={count}>{count}</option>
             })}
-          </select>
-        </form>
-      </div>
+          </Form.Control>
+        </Form>
+      </Row>
     )
   }
 }
