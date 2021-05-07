@@ -1,9 +1,7 @@
 const fs = require("fs");
 
 const addElection = (data) => {
-    // console.log(process.cwd());
     let electionData = loadElectionData();
-    console.log(electionData);
     electionData["elections"].push(data);
     const dataJSON = JSON.stringify(electionData, null, 2);
     const target = "./server/data/ElectionData.json";

@@ -150,11 +150,7 @@ class ElectionResults extends Component {
             unformatedSTVBallots.push(ballot);
           }
           const seatNumber = await this.props.contract.methods.stvSeatCount().call();
-          console.log(unformatedSTVBallots);
-          console.log(seatNumber);
-          console.log(this.state.candidates.length);
           const results = tallySTVBallots(unformatedSTVBallots, seatNumber, this.state.candidates.length);
-          console.log(results)
           let winnerCandidates = [];
           let loserCandidates = [];
           for (let i = 0; i < this.state.candidates.length; i++) {

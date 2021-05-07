@@ -17,7 +17,6 @@ class SelectElection extends Component {
       let contract;
       try {
         contract = await new this.props.web3.eth.Contract(ElectionContract.abi, address);
-        let contractAddress = contract.methods.getAddress().call();
         this.setState(() => {
           return {
             electionExists: true
@@ -29,7 +28,6 @@ class SelectElection extends Component {
             electionExists: false
           }
         })
-        console.log("error: contract address not found");
       }
       if (this.state.electionExists === true) {
         this.props.setContract(contract);

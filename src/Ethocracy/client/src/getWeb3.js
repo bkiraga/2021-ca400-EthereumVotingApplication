@@ -1,7 +1,6 @@
 import Web3 from "web3";
 
-
-//boilerplate code from truffle's version of create react app: https://www.trufflesuite.com/boxes/react
+//boilerplate code from truffle's version of create react app bootstrap: https://www.trufflesuite.com/boxes/react
 const getWeb3 = () =>
   new Promise((resolve, reject) => {
     // Wait for loading completion to avoid race conditions with web3 injection timing.

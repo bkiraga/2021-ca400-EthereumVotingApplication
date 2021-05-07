@@ -26,9 +26,6 @@ const NavigationBar = (props) => (
       <Nav.Link as={Link} to="/create">Create</Nav.Link>
       <Nav.Link as={Link} to="/myelections">My Elections</Nav.Link>
       <Nav.Link as={Link} to="/myballots">My Ballots</Nav.Link>
-      {/* <Nav.Link as={Link} style={{ color: 'inherit', textDecoration: 'inherit'}} className="text-link" to="/">Home</Nav.Link>
-      <Nav.Link as={Link} style={{ color: 'inherit', textDecoration: 'inherit'}} to="/vote">Vote</Nav.Link>
-      <Nav.Link as={Link} style={{ color: 'inherit', textDecoration: 'inherit'}} to="/create">Create</Nav.Link> */}
     </Nav>
   </Navbar.Collapse>
 </Navbar>

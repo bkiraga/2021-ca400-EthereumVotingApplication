@@ -24,11 +24,11 @@ class Vote extends Component {
   
     async getElections() {
       let elections = [];
-      let electionCount = await this.props.electionBuilder.methods.electionCount().call();
+      const electionCount = await this.props.electionBuilder.methods.electionCount().call();
       for (let i = 0; i < electionCount; i++) {
-        let electionAddress = await this.props.electionBuilder.methods.elections(i).call();
-        let electionData = await this.props.electionBuilder.methods.getElectionData(electionAddress).call();
-        let election = {name: electionData.name, address: electionAddress, type: electionData.electionType, deadline: electionData.deadline};
+        const electionAddress = await this.props.electionBuilder.methods.elections(i).call();
+        const electionData = await this.props.electionBuilder.methods.getElectionData(electionAddress).call();
+        const election = {name: electionData.name, address: electionAddress, type: electionData.electionType, deadline: electionData.deadline};
         elections.push(election);
       }
       this.setState(() => {

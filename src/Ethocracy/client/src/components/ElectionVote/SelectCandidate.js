@@ -37,7 +37,6 @@ class SelectCandidate extends Component {
     handleInputVoterId(e) {
       e.preventDefault();
       const voterId = e.target.elements.inputVoterId.value.trim()
-      console.log(voterId);
       this.setState(() => {
         return {
           voterId: voterId
