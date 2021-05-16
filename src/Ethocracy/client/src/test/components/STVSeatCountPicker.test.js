@@ -4,6 +4,6 @@ import STVSeatCountPicker from '../../components/ElectionDeployment/STVSeatCount
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<STVSeatCountPicker candidates={[]}/>, div);
+  ReactDOM.render(<STVSeatCountPicker candidates={[]} setSTVSeatCount={() => {}}/>, div);
   ReactDOM.unmountComponentAtNode(div);
 });

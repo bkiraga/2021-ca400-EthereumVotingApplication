@@ -57,9 +57,7 @@ class DeployElection extends Component {
         let arr = prevState.candidates;
         let index = arr.indexOf(candidate);
         arr.splice(index, 1);
-        // prevState.candidates.pop();
         return {
-          // candidates: prevState.candidates 
           candidates: arr
         }
       })

@@ -7,6 +7,10 @@ class STVSeatCountPicker extends Component {
       this.handleSubmitSeatCount = this.handleSubmitSeatCount.bind(this);
   }
 
+  componentDidMount() {
+    this.props.setSTVSeatCount(2);
+  }
+
   handleSubmitSeatCount(e) {
     e.preventDefault();
     this.props.setSTVSeatCount(this.electionSeatCount.value);

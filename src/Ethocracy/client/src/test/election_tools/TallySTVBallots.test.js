@@ -4,10 +4,11 @@ describe("TallySTVBallots", () => {
 
     it("Should tally ballots correctly", () => {
         const ballots = [[1,2,3,0],[0,1,2,3],[3,1,2,0],[2,0,3,1],[0,2,3,1],[3,0,2,1],[2,0,3,1],[3,2,0,1],[2,3,1,0],[2,3,0,1]];
+        
         const seatNumber = 2;
         const candidateNumber = 4;
         const tally = tallySTVBallots(ballots, seatNumber, candidateNumber);
-        expect(tally).toEqual([2, 0]);
+        expect(tally).toEqual([2, 3]);
     })
 
     it("Should change result if candidate order on ballot is changed", () => {
@@ -15,7 +16,7 @@ describe("TallySTVBallots", () => {
         const seatNumber = 2;
         const candidateNumber = 4;
         const tally = tallySTVBallots(ballots, seatNumber, candidateNumber);
-        expect(tally).not.toEqual([2, 0]);
+        expect(tally).not.toEqual([2, 3]);
     })
 
     it("Should NOT be affected by ballot order", () => {
@@ -23,7 +24,7 @@ describe("TallySTVBallots", () => {
         const seatNumber = 2;
         const candidateNumber = 4;
         const tally = tallySTVBallots(ballots, seatNumber, candidateNumber);
-        expect(tally).toEqual([2, 0]);
+        expect(tally).toEqual([2, 3]);
     })
     
     it("Should accept ballots with variable number of candidates filled in ", () => {
@@ -31,7 +32,7 @@ describe("TallySTVBallots", () => {
         const seatNumber = 2;
         const candidateNumber = 4;
         const tally = tallySTVBallots(ballots, seatNumber, candidateNumber);
-        expect(tally).toEqual([2, 0]);
+        expect(tally).toEqual([2, 3]);
     })
 
     it("Should change result depending on seats up for election", () => {

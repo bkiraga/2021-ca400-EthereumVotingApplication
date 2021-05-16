@@ -47,18 +47,13 @@ export const tallySTVBallots = (ballots, seatsNumber, candidateCount) => {
             removedCandidates.push(lastCandidate);
             for (let i = 0; i < ballots.length; i++) {
                 if (ballots[i][0] === lastCandidate){
-                    for (let j = 0; j < ballots[i].length; j++) {
-                        if (!removedCandidates.includes(ballots[i][j]) || !passedQuota.includes(ballots[i][j])) {
+                    for (let j = 1; j < ballots[i].length; j++) {
+                        if (!removedCandidates.includes(ballots[i][j]) && !passedQuota.includes(ballots[i][j])) {
                             let value = candidates.get(ballots[i][j]);
                             candidates.set(ballots[i][j], value + 1);
                             break;
                         } 
                     }
-                }
-            }
-            for (let [key,value] of candidates.entries()) {
-                if (value >= quota) {
-                    passedQuota.push(key);
                 }
             }
             candidates.delete(lastCandidate);
@@ -67,7 +62,7 @@ export const tallySTVBallots = (ballots, seatsNumber, candidateCount) => {
                 for (let i = 0; i < ballots.length; i++) {
                     if (roundWinnerIds.includes(ballots[i][0])) {
                         for (let j = 0; j < ballots[i].length; j++) {
-                            if (!removedCandidates.includes(ballots[i][j]) || !passedQuota.includes(ballots[i][j])) {
+                            if (!removedCandidates.includes(ballots[i][j]) && !passedQuota.includes(ballots[i][j])) {
                                 let value = candidates.get(ballots[i][j]);
                                 candidates.set(ballots[i][j], value + (1 * roundWinners[h].excessBallotRatio)); // weigh down 1 based on the number of ballots over the quota
                                 break
@@ -77,9 +72,7 @@ export const tallySTVBallots = (ballots, seatsNumber, candidateCount) => {
                 }
             }
         }
-
         rounds += 1;
     }
-
     return passedQuota;
-}       
+}
