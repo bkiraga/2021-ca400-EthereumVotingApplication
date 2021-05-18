@@ -74,5 +74,20 @@ export const tallySTVBallots = (ballots, seatsNumber, candidateCount) => {
         }
         rounds += 1;
     }
+
+    if (passedQuota.length !== seatsNumber) {
+        const remainderSeats = seatsNumber - passedQuota.length;
+        let count = 0;
+        for (let i = removedCandidates.length - 1; i > 0; i--) {
+            if (!passedQuota.includes(removedCandidates[i])) {
+                passedQuota.push(removedCandidates[i]);
+            }
+            count += 1;
+            if (count === remainderSeats) {
+                break
+            }
+        }
+    }
+
     return passedQuota;
 }

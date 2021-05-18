@@ -15,6 +15,10 @@ class SubmitElection extends Component {
     const selectedTimestamp = Math.ceil(this.props.selectedTime.getTime() / 1000);
     const currentTimestamp = Math.floor(Date.now() / 1000);
     const time = selectedTimestamp - currentTimestamp;
+    if (time < 0) {
+      alert("incorrect time selected");
+      return;
+    }
     const date = new Date(selectedTimestamp * 1000);
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul;", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const month = months[date.getMonth()];
