@@ -15,25 +15,27 @@ class SelectElection extends Component {
       e.preventDefault();
       const address = e.target.elements.selectElection.value.trim();
       let contract;
-      try {
-        contract = await new this.props.web3.eth.Contract(ElectionContract.abi, address);
-        this.setState(() => {
-          return {
-            electionExists: true
-          }
-        })
-      } catch(e) {
-        this.setState(() => {
-          return {
-            electionExists: false
-          }
-        })
-      }
-      if (this.state.electionExists === true) {
-        this.props.setContract(contract);
-        this.props.setSelectedElection(true);
-      } else {
-        this.props.setSelectedElection(false);
+      if (address !== "") {
+        try {
+          contract = await new this.props.web3.eth.Contract(ElectionContract.abi, address);
+          this.setState(() => {
+            return {
+              electionExists: true
+            }
+          })
+        } catch(e) {
+          this.setState(() => {
+            return {
+              electionExists: false
+            }
+          })
+        }
+        if (this.state.electionExists === true) {
+          this.props.setContract(contract);
+          this.props.setSelectedElection(true);
+        } else {
+          this.props.setSelectedElection(false);
+        }
       }
     }
   

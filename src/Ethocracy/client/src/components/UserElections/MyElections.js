@@ -30,7 +30,8 @@ class MyElections extends Component {
   render() {
     return (
       <div>
-        <p>My Elections</p>
+        <br />
+        <h1>My Elections</h1>
         <MyElectionsTable myElections={this.state.myElections}/>
       </div>
     );

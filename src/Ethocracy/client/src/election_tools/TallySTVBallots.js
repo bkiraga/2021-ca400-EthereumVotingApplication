@@ -44,7 +44,9 @@ export const tallySTVBallots = (ballots, seatsNumber, candidateCount) => {
                     lastCandidate = key;
                 }
             }
-            removedCandidates.push(lastCandidate);
+            if (lastCandidate !== undefined) {
+                removedCandidates.push(lastCandidate);
+            }
             for (let i = 0; i < ballots.length; i++) {
                 if (ballots[i][0] === lastCandidate){
                     for (let j = 1; j < ballots[i].length; j++) {
@@ -86,6 +88,13 @@ export const tallySTVBallots = (ballots, seatsNumber, candidateCount) => {
             if (count === remainderSeats) {
                 break
             }
+        }
+    }
+    
+    if (passedQuota.length > seatsNumber) {
+        const excessSeats = passedQuota.length - seatsNumber;
+        for (let i = 0; i < excessSeats; i++) {
+            passedQuota.pop();
         }
     }
 

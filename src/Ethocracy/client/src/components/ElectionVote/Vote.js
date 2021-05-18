@@ -19,7 +19,11 @@ class Vote extends Component {
     }
   
     componentDidMount = async () => {
-      await this.getElections();
+      try {
+        await this.getElections();
+      } catch (exception) {
+        alert("uanble to fetch elections");
+      }
     }
   
     async getElections() {

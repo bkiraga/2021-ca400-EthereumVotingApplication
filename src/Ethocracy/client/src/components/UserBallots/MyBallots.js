@@ -22,6 +22,7 @@ class MyBallots extends Component {
   render() {
     return (
       <div>
+        <br />
         <h1>My Ballots</h1>
         <MyBallotsTable myBallots={this.state.myBallots}/>
       </div>
